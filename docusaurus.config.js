@@ -19,7 +19,8 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'divviup', // Usually your GitHub org/user name.
-  projectName: 'public-docs', // Usually your repo name.
+  projectName: 'divviup.github.io', // Usually your repo name.
+  deploymentBranch: 'gh-pages',
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
