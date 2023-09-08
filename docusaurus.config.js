@@ -40,6 +40,7 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
+          sidebarCollapsed: false,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl: 'https://github.com/divviup/public-docs/tree/main/',
@@ -71,6 +72,11 @@ const config = {
             sidebarId: 'docSidebar',
             position: 'left',
             label: 'Documentation',
+          },
+          {
+            href: 'https://app.divviup.org',
+            label: 'App',
+            position: 'left',
           },
           {
             href: 'https://github.com/divviup',
