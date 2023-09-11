@@ -18,7 +18,7 @@ const sidebars = {
     {
       'Resources': [
         {
-          'Client Library References': [
+          'DAP Client Libraries': [
             {
               type: 'link',
               label: 'divviup-ts (TypeScript)',
@@ -32,9 +32,23 @@ const sidebars = {
           ]
         },
         {
-          type: 'link',
-          label: 'Divvi Up API Reference',
-          href: 'https://app.divviup.org/swagger-ui',
+          'Divvi Up API': [
+            {
+              type: 'link',
+              label: 'API Reference',
+              href: 'https://app.divviup.org/swagger-ui',
+            },
+            {
+              type: 'link',
+              label: 'CLI',
+              href: 'https://github.com/divviup/divviup-api/tree/main/cli',
+            },
+            {
+              type: 'link',
+              label: 'Client Library (Rust)',
+              href: 'https://github.com/divviup/divviup-api/tree/main/client',
+            },
+          ]
         },
         {
           'IETF Specifications': [
