@@ -1,0 +1,39 @@
+# Create a Task
+
+A task represents a single measurement process.
+It provides the type of measurement, the aggregation function to compute, the set of aggregators to use, and other important parameters.
+
+## Step 1: Create a collector HPKE configuration
+
+To collect your aggregate results later on, you'll need a public and private key.
+Aggregators use the public key to encrypt aggregate shares, and you'll use the private key to decrypt them.
+
+Divvi Up, as part of its adherence to the [Distributed Aggregation Protocol][1], uses the [hybrid public key encryption (HPKE)][2] scheme for its keys.
+
+Use the `divviup` CLI to easily generate and upload an HPKE key.
+```bash
+export TOKEN=<Divvi Up API Token>
+divviup hpke-config generate --name "Tutorial"
+```
+
+## Step 2: Create the task through the UI
+
+In this tutorial, we'll create a simple task.
+
+1. From the `Accounts` page, choose an account that the task should be associated with.
+2. Choose the `Tasks` page.
+3. Select `New Task`.
+4. Fill the form with the following values:
+    - `Task Name`: Example
+    - `Leader Aggregator`: Divvi Up (DAP-04)
+    - `Helper Aggregator`: **TODO: production doesn't have another global aggregator!**
+    - `Function`: sum
+    - `Query Type`: Fixed Size
+    - `Minimum Batch Size`: 5
+    - `Collector HPKE Config`: Choose the key you created earlier
+    - `Time Precision`: 1 minute
+
+get the task parameters for the client
+
+[1]: 
+[2]: https://www.rfc-editor.org/rfc/rfc9180.html

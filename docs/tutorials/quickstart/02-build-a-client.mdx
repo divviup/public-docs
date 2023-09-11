@@ -1,0 +1,32 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Build Your Client
+
+Once a task is created, client apps are written to take measurements, shard them, and send them to the aggregators configured in [Create a Task](./create-a-task).
+Fortunately, there are libraries that make client interop with aggregators simple.
+
+For the purposes of this tutorial, we'll write a simple app from scratch.
+It'll accept a value at the command line, and send it to Divvi Up using the task we created earlier.
+
+<Tabs>
+  <TabItem value="typescript" label="TypeScript" default>
+    We'll assume that you have NPM and Node.JS installed.
+
+	npm create
+
+	write code
+
+	run app a few times
+  </TabItem>
+  <TabItem value="rust" label="Rust">
+    We'll assume you have a valid Rust toolchain installed.
+
+	cargo new
+
+	write code
+
+	run app a few times
+  </TabItem>
+</Tabs>
+

@@ -1,0 +1,41 @@
+---
+sidebar_position: 1
+---
+# Prerequisites
+
+Complete the initial setup before proceeding to the further tutorials.
+
+## Step 1: Install the Divvi Up CLI
+
+The `divviup` CLI offers several helpful functions for interacting with the platform.
+
+<!--
+TODO(https://github.com/divviup/divviup-api/issues/492): Update this section once we have binary releases.
+-->
+To install it, [install a Rust toolchain][1], if you don't already have one.
+
+Then, use `cargo` to install the CLI.
+
+<!--
+TODO(https://github.com/divviup/divviup-api/issues/493): Remove git parameter once binary is available on crates.io
+-->
+```bash
+cargo install divviup-cli --git https://github.com/divviup/divviup-api
+```
+
+:::tip
+`divviup-cli` is under rapid development.
+Consider regularly updating it with the same `cargo install` command above to get the latest features and bugfixes.
+:::
+
+## Step 2: Sign Up for Divvi Up
+
+At the moment, you'll need an invitation to start using Divvi Up.
+You can receive one through one of the following means:
+- Have an existing user invite you through the Accounts -> Membership page.
+- Join our waitlist [through our waitlist][2]. 
+
+Accept the invite in your email to launch the account setup.
+
+[1]: https://rustup.rs/
+[2]: https://divviup.org/get-involved/
