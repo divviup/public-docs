@@ -75,7 +75,7 @@ const config = {
           },
           {
             href: 'https://app.divviup.org',
-            label: 'App',
+            label: 'Divvi Up',
             position: 'left',
           },
           {
