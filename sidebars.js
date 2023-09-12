@@ -22,7 +22,7 @@ const sidebars = {
             {
               type: 'link',
               label: 'divviup-ts (TypeScript)',
-              href: 'https://docs.divviup.org/divviup-ts',
+              href: 'https://divviup.github.io/divviup-ts',
             },
             {
               type: 'link',
