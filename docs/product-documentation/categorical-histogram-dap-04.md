@@ -1,8 +1,3 @@
----
-slug: /categorical-histogram-dap-04
-sidebar_position: 2
----
-
 # Emulating Categorical Histograms with DAP draft-04
 
 The Prio3Histogram VDAF has changed between drafts 04 and 07 of DAP. Initially,
