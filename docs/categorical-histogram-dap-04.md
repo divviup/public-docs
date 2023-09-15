@@ -8,7 +8,7 @@ sidebar_position: 2
 The Prio3Histogram VDAF has changed between drafts 04 and 07 of DAP. Initially,
 it provided the functionality of a conventional histogram of a continuous
 variable. As of draft-07, its API has changed to be more flexible, supporting
-other use cases like categorical variables, multi-dimensional histograms, etc.
+other use cases like categorical variables, multidimensional histograms, etc.
 This guide covers how to emulate this behavior and use Prio3Histogram as of DAP
 draft-04 to count occurrences of different values of a categorical variable.
 This is only applicable to deployments using older versions of the protocol;
