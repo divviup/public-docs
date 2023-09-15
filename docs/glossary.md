@@ -1,5 +1,6 @@
 ---
-sidebar_position: 5
+# Glossary position should be as last as possible, but before the Resources category.
+sidebar_position: 999
 ---
 
 # Glossary
@@ -13,9 +14,8 @@ A server that implements the Distributed Aggregation Protocol (DAP). Divvi Up
 and its partners operate DAP-compliant aggregators. Aggregators can be
 self-hosted.
 
-Aggregators ingest [report shares](#report-share) sent from clients. They
-perform aggregation of batches of report shares into
-[aggregate shares](#aggregate-share), and service [collector](#collector)
+Aggregators ingest measurements sent from clients. They perform aggregation of
+batches or reports into aggregations, and service [collector](#collector)
 requests.
 
 Aggregators can be in one of two roles, [Leader](#leader) or [Helper](#helper).
