@@ -43,12 +43,12 @@ output is `<0, 1, 0, 0, ... 0>`. If the measurement is greater than
 This version uses the [definition of Prio3Histogram from VDAF
 draft-07](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-07.html#name-prio3histogram).
 The vdaf has two parameters, `length` and `chunk_length`, both positive
-integers. The measurement is an integer between 0 and (length - 1).
+integers. The measurement is an integer between 0 and `length - 1`.
 
 As before, measurements get encoded into a vector , such that one vector element
 is 1, and the rest are 0. The length of the encoded vector is equal to the
-`length` parameter. (the `chunk_length` parameter is not relevant to measurement
-encoding) In this case, the encoding procedure is much simpler: the measurement
+`length` parameter (the `chunk_length` parameter is not relevant to measurement
+encoding). In this case, the encoding procedure is much simpler. The measurement
 is used as an index into the encoded vector, and the element that the index
 points to is set to 1.
 
