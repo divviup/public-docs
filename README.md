@@ -1,6 +1,7 @@
 # Divvi Up Documentation
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+This website is built using [Docusaurus 2](https://docusaurus.io/), a modern
+static website generator.
 
 ### Local Development
 
@@ -8,12 +9,14 @@ This website is built using [Docusaurus 2](https://docusaurus.io/), a modern sta
 yarn start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+This command starts a local development server and opens up a browser window.
+Most changes are reflected live without having to restart the server.
 
 ### Deployment
 
-On pull request merge to the `main` branch, GitHub Actions will build the site and push the generated contents to the `gh-pages` branch.
-GitHub Pages will then automatically pick up the new changes.
+On pull request merge to the `main` branch, GitHub Actions will build the site
+and push the generated contents to the `gh-pages` branch. GitHub Pages will then
+automatically pick up the new changes.
 
 ### Formatting
 
