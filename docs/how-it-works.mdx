@@ -9,7 +9,7 @@ privacy-preserving property.
 
 ## Breakdown
 
-Divvi Up functionality can be broadly broken down into five steps.
+Divvi Up functionality can be broadly broken down into several steps.
 
 See the [Distributed Aggregation Protocol (DAP)][DAP] for a highly detailed
 specification of the protocol that underpins Divvi Up.
@@ -19,35 +19,41 @@ specification of the protocol that underpins Divvi Up.
 ![](../static/how-it-works.png#gh-dark-mode-only)
 ![](../static/how-it-works-light.jpg#gh-light-mode-only)
 
+### Step 0: Subscriber sets up Divvi Up
+
+Subscribers are entities, such as app developers, who wish to collect quantifiable metrics
+about their end-user applications.
+
+The subscriber chooses a Distributed Aggregation Protocol (DAP) client library, which is used for interacting with any DAP-compatible metrics aggregators, such as the ones provided by Divvi Up and its partners.
+A client library for [Rust (janus_client)][janus_client] and [TypeScript (divviup-ts)][divviup-ts] is available.
+
+For each metric, the subscriber creates a task, whose parameters encode data about the measurement being taken.
+
 ### Step 1: Client generates measurements
 
-An app developer wants to collect statistics about their app, such as user
-behavior, demographics, or system information. The developer writes app
-functionality that takes measurements of these properties.
-
-In Divvi Up, the developer creates a Task, which encodes data about the
-measurement being taken. This encoded data is stored in the app and used by
-client libraries. The data includes the measurement type, the two Divvi Up
-aggregators being used, the identifier for the task, and how aggregates are to
-be queried. The measurement type includes, but is not limited to, counts, sums,
-and histograms.
+The subscriber writes and deploys app functionality that takes measurements corresponding to each task.
+Using a DAP client library, they also encode some of the task parameters into the app, such as the task identifier, measurement type, and the Divvi Up aggregators being used.
 
 For each measurement, the subsequent steps are performed.
 
-### Step 2: Client divides the measurement
+### Step 2: Client shards the measurement
 
-Using a client library, the app divides the measurement into two shares, known
-as report shares. One report share is meant for a Leader aggregator, and a
-Helper aggregator. Each share is encrypted with the respective aggregator's
-public key.
+With the client library, the app randomly shards the measurement into two shares, known
+as report shares. One report share is for a leader aggregator, and the other for a
+helper aggregator.
 
-### Step 3: Client sends to the aggregators
+Both aggregators advertise a public key and possess its corresponding private key.
+The client library encrypts each share with the respective aggregator's public key.
+
+### Step 3: Client sends shares to the aggregators
 
 The client library sends each report share via HTTPS to the leader and helper
 aggregator.
 
+Aggregators reject out-of-range or invalid measurements, as defined in the task parameters. This is done without knowledge of the full input measurement.
+
 The aggregators in use are determined by the app developer and encoded in the
-task data. Each aggregator is operated independently by two different
+task parameters. Each aggregator is operated independently by two different
 organizations. Often, Divvi Up will act as the leader, while another
 organization operates as a helper.
 
@@ -58,13 +64,10 @@ report shares or otherwise conspire to defeat the protocol. If you do not trust
 any of the already-available third-party organizations that Divvi Up partners
 with, you can self-host your own helper aggregator.
 
-At this stage, aggregators can also reject out-of-range or invalid measurements
-without having knowledge of the input measurement.
-
-:::note 
-Both shares are actually sent to the Leader aggregator. The Leader
-aggregator relays the Helper's report share to the Helper. Because the Helper's
-report share is encrypted to the Helper, the Leader cannot read it and the
+:::note
+Both shares are actually sent to the leader aggregator. The leader
+aggregator relays the helper's report share to the helper. Because the helper's
+report share is encrypted to the helper, the leader cannot read it and the
 non-collusion property is preserved.
 
 This is done to simplify client library implementation and reduce the number of
@@ -104,13 +107,15 @@ come up with here.
 Off-the-shelf collectors that more elegantly handle the collection process and
 presentation of data are currently in development.
 
-:::note 
+:::note
 Similar to with report shares, a collector does not directly talk to
 both aggregators. Instead the helper's aggregate share is relayed through the
 leader. Because each share is encrypted to the collector, the leader cannot read
 the aggregate shares or reconstitute the aggregate.
 :::
 
-[DAP]: https://datatracker.ietf.org/doc/draft-irtf-cfrg-vdaf/
+[DAP]: https://datatracker.ietf.org/doc/draft-ietf-ppm-dap/ 
 [MPC]: https://en.wikipedia.org/wiki/Secure_multi-party_computation
 [VDAF]: https://datatracker.ietf.org/doc/draft-irtf-cfrg-vdaf/
+[divviup-ts]: https://github.com/divviup/divviup-ts
+[janus_client]: https://crates.io/crates/janus_client 
