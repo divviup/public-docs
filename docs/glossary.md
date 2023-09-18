@@ -69,7 +69,7 @@ perserving metrics for their application.
 
 ### Task
 
-Represents the measurement process. The task the basic entity that Divvi Up and
+Represents the measurement process. The task is the core entity that Divvi Up and
 clients use for submitting and aggregating measurements.
 
 [janus]: https://github.com/divviup/janus
