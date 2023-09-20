@@ -55,16 +55,16 @@ Each participant in a DAP system adopts one of these roles: [client](#client),
 
 ### Helper
 
-A DAP aggregator that performs aggregation and collection in response to
-direction from the Leader.
+A [DAP](#distributed-aggregation-protocol-dap) aggregator that performs
+aggregation and collection in response to direction from the Leader.
 
 The system requirements for a helper are lower than those for a leader.
 
 ### Leader
 
-A DAP aggregator that directly ingests [reports](#report) from clients, and
-drives the aggregation and collection processes with the helper. The leader
-determines how reports are to be batched.
+A [DAP](#distributed-aggregation-protocol-dap) aggregator that directly ingests
+[reports](#report) from clients, and drives the aggregation and collection
+processes with the helper. The leader determines how reports are to be batched.
 
 The system and network bandwidth requirements for a leader are higher than for
 those for a helper.
@@ -72,7 +72,7 @@ those for a helper.
 ### Query type
 
 Describes how [reports](#report) are grouped into batches for aggregation. There
-are two query types defined by DAP:
+are two query types defined by [DAP](#distributed-aggregation-protocol-dap):
 
 - Time-interval: Reports are grouped into batches based on the timestamp of the
   report.
