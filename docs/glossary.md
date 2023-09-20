@@ -15,7 +15,7 @@ protocols it uses.
 
 A server that implements the aggregation subprotocol of
 [DAP](#distributed-aggregation-protocol-dap). Divvi Up and its partners operate
-DAP-compliant aggregators. Aggregators can be self-hosted.
+DAP-compliant aggregators. Aggregators can also be self-hosted.
 
 Aggregators ingest measurements sent from [clients](#client). They aggregate
 reports into batches, and service [collector](#collector) requests.
@@ -28,9 +28,9 @@ Examples of aggregator software include [Janus (ISRG)][janus], and [Daphne
 ### Client
 
 An end-user app that uses the client subprotocol of
-[DAP](#distributed-aggregation-protocol-dap) to contribute a measurement to a
-metric. It sends [report shares](#report) to the leader aggregator. Typically,
-app developers can achieve this using a DAP client library.
+[DAP](#distributed-aggregation-protocol-dap) to contribute measurements to a
+[task](#task). Typically, app developers will integrate a DAP client library to
+achieve this.
 
 ### Collector
 
@@ -47,8 +47,8 @@ available in [Janus][collect.rs].
 ### Distributed Aggregation Protocol (DAP)
 
 A protocol that describes a multi-party distributed system for privacy
-preserving measurement. It is currently in the draft phase. Its specification
-can be viewed on the [IETF data tracker][DAP].
+preserving aggregation of measurements. It is currently in the draft phase. Its
+specification can be viewed on the [IETF data tracker][DAP].
 
 Each participant in a DAP system adopts one of these roles: [client](#client),
 [collector](#collector), [leader](#leader), or [helper](#helper).

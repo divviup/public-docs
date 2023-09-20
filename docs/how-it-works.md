@@ -8,32 +8,33 @@ Learn how Divvi Up works and how it protects privacy.
 
 ## Breakdown
 
-Divvi Up ingests measurements and aggregates them into metrics, while protecting
-the privacy of each individual measurement. This can be broadly broken down into
-several steps.
-
-See the [Distributed Aggregation Protocol (DAP)][DAP] for a highly detailed
-specification of the protocol that underpins Divvi Up.
+Divvi Up ingests measurements and aggregates them, while protecting the privacy
+of each individual measurement. This can be broadly broken down into several
+steps, described in the following sections.
 
 <!-- TODO(inahga): Consider making this a more detailed `mermaid` diagram -->
 
 ![](../static/how-it-works.png#gh-dark-mode-only)
 ![](../static/how-it-works-light.jpg#gh-light-mode-only)
 
+See the [Distributed Aggregation Protocol (DAP)][DAP] for a highly detailed
+specification of the protocol that underpins Divvi Up.
+
 ### Step 0: Subscriber sets up Divvi Up
 
 Subscribers are users of Divvi Up, such as app developers, who wish to collect
-quantitative metrics about their end-user applications.
+quantitative measurements about their end-user applications.
 
 The subscriber chooses a DAP client library, which is used to interact with any
-DAP-compatible metrics aggregator, such as the aggregators provided by Divvi Up
-and its partners. Client libraries for [Rust (janus_client)][janus_client] and
-[TypeScript (divviup-ts)][divviup-ts] are available.
+DAP-compatible measurements aggregator, such as the aggregators provided by
+Divvi Up and its partners. Client libraries for [Rust
+(janus_client)][janus_client] and [TypeScript (divviup-ts)][divviup-ts] are
+available.
 
-For each metric the subscriber wishes to aggregate, the subscriber creates a
-task. A task encodes metadata about how the measurement will be made and which
-aggregators will be used. The task's parameters are shared with both
-aggregators.
+For each measurement the subscriber wishes to aggregate, the subscriber creates
+a task. A task encodes metadata about how the measurement will be made, which
+aggregators will be used, and which aggregation function to use. The task's
+parameters are shared with both aggregators.
 
 ### Step 1: Client generates measurements
 
@@ -69,7 +70,7 @@ as the leader, while another organization operates as a helper.
 Crucially, these organizations are non-colluding. They don't directly share
 report shares or otherwise conspire to defeat the protocol. DAP guarantees that
 as long as at least one of the aggregators is operated honestly, the privacy of
-each individual metric will be protected.
+each individual measurement will be protected.
 
 If you don't wish to use any of the already-available third-party organizations
 that Divvi Up partners with, you can self-host your own helper aggregator.
@@ -102,7 +103,7 @@ overall aggregate. Neither share reveals information about the final aggregate.
 
 Each aggregator stores its aggregate share until the next step.
 
-### Step 5: Subscriber collects aggregate metrics
+### Step 5: Subscriber collects aggregate measurements
 
 The subscriber operates a collector, which queries each aggregator to collect
 the aggregate shares. Depending on the query type, this could be a query over a
