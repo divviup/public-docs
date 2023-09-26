@@ -58,7 +58,8 @@ Each participant in a DAP system adopts one of these roles: [client](#client),
 A [DAP](#distributed-aggregation-protocol-dap) aggregator that performs
 aggregation and collection in response to direction from the Leader.
 
-The system requirements for a helper are lower than those for a leader.
+The system and network bandwidth requirements for a helper are lower than those
+for a leader.
 
 ### Leader
 
@@ -76,12 +77,20 @@ are two query types defined by [DAP](#distributed-aggregation-protocol-dap):
 
 - Time-interval: Reports are grouped into batches based on the timestamp of the
   report.
-- Fixed-size: Reports are grouped into arbitrary batches by the leader.
+- Fixed-size: Reports are grouped into batches of fixed size by the leader.
 
 ### Report
 
-A client-submitted measurement. Each report is composed of two encrypted report
-shares: one for the leader, and one for the helper.
+A client-submitted measurement. Each report is composed of two report shares:
+one for the leader, and one for the helper.
+
+Each report share contains the following data:
+
+- An encrypted shard of the original measurement.
+- A public share, containing additional data required for validation. Not all
+  measurement types require a public share.
+- A randomly generated report identifier.
+- The time at which the report was generated.
 
 ### Subscriber
 
@@ -90,8 +99,14 @@ perserving metrics for their application.
 
 ### Task
 
-Represents a single metric to be measured. The task is the core entity that
-Divvi Up and clients use for submitting and aggregating measurements.
+The core entity that Divvi Up and clients use for submitting and aggregating
+measurements. Determines the type of measurement (count, sum, histogram, et.
+al.), which [aggregators](#aggregator) will be used, which aggregation function
+to use, and additional metadata depending on the
+[DAP](#distributed-aggregation-protocol-dap) participant.
+
+An [client](#client) application will have a task for each kind of measurement
+it takes.
 
 [janus]: https://github.com/divviup/janus
 [daphne]: https://github.com/cloudflare/daphne

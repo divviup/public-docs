@@ -32,7 +32,7 @@ Divvi Up and its partners. Client libraries for [Rust
 available.
 
 For each measurement the subscriber wishes to aggregate, the subscriber creates
-a task. A task encodes metadata about how the measurement will be made, which
+a task. A task contains metadata about how the measurement will be made, which
 aggregators will be used, and which aggregation function to use. The task's
 parameters are shared with both aggregators.
 
@@ -51,16 +51,17 @@ The app uses the DAP client library to randomly shard the measurement into two
 parts, known as report shares. One report share is for the leader aggregator,
 and the other for the helper aggregator.
 
-Each aggregator advertises a public key corresponding to its private key. The
-client library encrypts each share with the respective aggregator's public key.
+The client library encrypts each share with a public key advertised by the
+respective aggregator.
 
 ### Step 3: Client sends shares to the aggregators
 
-The DAP client library sends each report share via HTTPS to the leader and
-helper aggregators.
+The DAP client library sends the report shares via HTTPS to the leader
+aggregator.
 
-Aggregators reject out-of-range or invalid measurements, as defined in the task
-parameters. This is done without knowledge of the original measurement.
+The leader relays the helper's share to the helper. Because the helper's report
+share is encrypted to the helper, the leader cannot read it or reconstitute the
+original measurement.
 
 Each aggregator is operated by different organizations. Often, Divvi Up will act
 as the leader, while another organization operates as a helper.
@@ -69,34 +70,25 @@ as the leader, while another organization operates as a helper.
 
 Crucially, these organizations are non-colluding. They don't directly share
 report shares or otherwise conspire to defeat the protocol. DAP guarantees that
-as long as at least one of the aggregators is operated honestly, the privacy of
-each individual measurement will be protected.
+as long as at least one of the aggregators operates according to the protocol,
+the privacy of each individual measurement will be protected.
 
 If you don't wish to use any of the already-available third-party organizations
 that Divvi Up partners with, you can self-host your own helper aggregator.
 
-:::note
-
-Both shares are actually sent to the leader aggregator. The leader relays the
-helper's report share to the helper. Because the helper's report share is
-encrypted to the helper, the leader cannot read it and the non-collusion
-property is preserved.
-
-This is done to simplify client library implementation, reduce the number of
-client network round-trips, and reduce the operational requirements of the
-helper.
-
-:::
-
 ### Step 4: Aggregators perform aggregation
 
-Both aggregators work together to compute an aggregate across a batch of report
-shares, without revealing the report share to each other and without any
-knowledge of the originally submitted measurement.
+Both aggregators work together to reject out-of-range or invalid measurements,
+without revealing the report shares to each other and without any knowledge of
+the originally submitted measurements. They do this by exchanging [zero
+knowledge proofs (ZKP)][ZKP] based on their report share.
 
 The principle behind this is [multi-party computation][MPC]. The MPC protocol is
-described in DAP and the cryptography involved is described in [Verifiable
+described in DAP and the ZKP cryptography is described in [Verifiable
 Distributed Aggregation Functions (VDAF)][VDAF].
+
+After validation, each aggregator independently executes the aggregation
+function. For most measurement types, this will be summation.
 
 At the end of the process, each aggregator will have computed a share of the
 overall aggregate. Neither share reveals information about the final aggregate.
@@ -116,23 +108,20 @@ Each aggregate share is encrypted to the collector. The collector combines the
 aggregate shares, yielding the aggregate result, the number of reports included
 in the result, and the time interval that the result spans.
 
+The collector only communicates with the leader. The leader relays the helper's
+aggregate share to the collector. Because each share is encrypted to the
+collector, the leader cannot read the aggregate shares or reconstitute the
+aggregate.
+
 <!-- TODO(https://github.com/divviup/janus-ops/issues/1005): we should make
 mention of the adapters we come up with here. -->
 
 Off-the-shelf collectors that more elegantly handle the collection process and
 presentation of data are currently in development.
 
-:::note
-
-As with the upload process, a collector does not directly talk to both
-aggregators. Instead the helper's aggregate share is relayed through the leader.
-Because each share is encrypted to the collector, the leader cannot read the
-aggregate shares or reconstitute the aggregate.
-
-:::
-
 [DAP]: https://datatracker.ietf.org/doc/draft-ietf-ppm-dap/
 [MPC]: https://en.wikipedia.org/wiki/Secure_multi-party_computation
 [VDAF]: https://datatracker.ietf.org/doc/draft-irtf-cfrg-vdaf/
+[ZKP]: https://en.wikipedia.org/wiki/Zero-knowledge_proof
 [divviup-ts]: https://github.com/divviup/divviup-ts
 [janus_client]: https://crates.io/crates/janus_client
