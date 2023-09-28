@@ -46,3 +46,11 @@
   background-color: #0114b5;
   padding: var(--ifm-spacing-vertical);
 }
+
+/* Use github's image overrides for light/dark mode so that we can view rendered markdown in the 
+ * github UI too 
+ */
+[data-theme='light'] img[src$='#gh-dark-mode-only'],
+[data-theme='dark'] img[src$='#gh-light-mode-only'] {
+  display: none;
+}
