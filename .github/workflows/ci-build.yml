@@ -1,4 +1,9 @@
-name: Test deployment
+name: Format and Test
+
+# Prevent formatting commit collisions when pushing code too fast.
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 
 on:
   pull_request:
@@ -6,11 +11,48 @@ on:
       - main
 
 jobs:
-  test-deploy:
-    name: Test deployment
+  format:
+    name: Format code
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      head: ${{ steps.head.outputs.head }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          # Check out the branch that the PR refers to, so the git HEAD isn't detached.
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+      - run: npx prettier --write .
+      - name: Push changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            # github-actions name and email derived from https://github.com/orgs/community/discussions/26560
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            git commit -am "Automatic formatting"
+            git push
+          fi
+      - name: Get head SHA
+        id: head
+        run: echo "head=$(git rev-parse HEAD)" >>"$GITHUB_OUTPUT"
+
+  test:
+    name: Test deployment
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+    needs: [format]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Check out the HEAD from the previous workflow, to catch any mistakes that the formatter
+          # may have introduced.
+          ref: "${{ needs.format.outputs.head }}"
       - uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -20,3 +62,22 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Test build website
         run: yarn build
+
+      # The format job may have changed the PR's head. When the head is changed through a workflow
+      # another workflow is not kicked off to prevent infinite loops. Thus, the new head never
+      # receives its workflow status.
+      #
+      # Workaround this by setting a status check to the new head manually.
+      - name: Set status check
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}      
+        run: |
+          gh api \
+            repos/${{ github.repository }}/commits/${{ needs.format.outputs.head }}/statuses \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -f state="${{ job.status }}" \
+            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            -f context="Format and Test"

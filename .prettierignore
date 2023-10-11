@@ -1,0 +1,3 @@
+# Don't format github workflows because this breaks CI formatting. GitHub rejects commits inside an
+# action that create workflows or change existing ones.
+.github/workflows
