@@ -13,8 +13,8 @@ newer deployments using draft-07 or later can disregard this guide.
 
 ### Prio3Histogram, DAP draft-04
 
-This version uses the [definition of Prio3Histogram from VDAF
-draft-05](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-05.html#name-prio3histogram).
+This version uses the
+[definition of Prio3Histogram from VDAF draft-05](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-05.html#name-prio3histogram).
 The VDAF has one parameter, `buckets`, which is a list of integers in ascending
 order. The measurement is an integer, which gets compared to each value in the
 `buckets` parameter.
@@ -35,8 +35,8 @@ output is `<0, 1, 0, 0, ... 0>`. If the measurement is greater than
 
 ### Prio3Histogram, DAP draft-07
 
-This version uses the [definition of Prio3Histogram from VDAF
-draft-07](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-07.html#name-prio3histogram).
+This version uses the
+[definition of Prio3Histogram from VDAF draft-07](https://www.ietf.org/archive/id/draft-irtf-cfrg-vdaf-07.html#name-prio3histogram).
 The vdaf has two parameters, `length` and `chunk_length`, both positive
 integers. The measurement is an integer between 0 and `length - 1`.
 
@@ -75,12 +75,12 @@ For example, if we want to make a categorical histogram of the letters "A", "B",
 "C", and "D", we would remap measurements using the following lookup table, and
 instantiate Prio3Histogram with `buckets = [0, 1, 2]`.
 
-|Original measurement|Remapped measurement|
-|---|---|
-| A | 0 |
-| B | 1 |
-| C | 2 |
-| D | 3 |
+| Original measurement | Remapped measurement |
+| -------------------- | -------------------- |
+| A                    | 0                    |
+| B                    | 1                    |
+| C                    | 2                    |
+| D                    | 3                    |
 
 If we get an aggregate result of "7, 15, 1, 29", that means there were seven "A"
 measurements, fifteen "B" measurements, etc.
@@ -92,17 +92,17 @@ remapping a single categorical variable to a number, you would instead define a
 mapping from a tuple of all input variables to one number.
 
 For example, a multidimensional histogram of two categorical variables, with
-three levels each, could be implemented using the lookup table below, and
-by instantiating Prio3Histogram with `buckets = [0, 1, 2, 3, 4, 5, 6, 7]`
+three levels each, could be implemented using the lookup table below, and by
+instantiating Prio3Histogram with `buckets = [0, 1, 2, 3, 4, 5, 6, 7]`
 
-|Original measurement|Remapped measurement|
-|------|---|
-| A, X | 0 |
-| A, Y | 1 |
-| A, Z | 2 |
-| B, X | 3 |
-| B, Y | 4 |
-| B, Z | 5 |
-| C, X | 6 |
-| C, Y | 7 |
-| C, Z | 8 |
+| Original measurement | Remapped measurement |
+| -------------------- | -------------------- |
+| A, X                 | 0                    |
+| A, Y                 | 1                    |
+| A, Z                 | 2                    |
+| B, X                 | 3                    |
+| B, Y                 | 4                    |
+| B, Z                 | 5                    |
+| C, X                 | 6                    |
+| C, Y                 | 7                    |
+| C, Z                 | 8                    |

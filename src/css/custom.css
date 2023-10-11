@@ -19,7 +19,7 @@
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --ifm-color-primary: #00c9ff;
   --ifm-color-primary-dark: #00c9ff;
   --ifm-color-primary-darker: #00c9ff;
@@ -50,7 +50,7 @@
 /* Use github's image overrides for light/dark mode so that we can view rendered markdown in the 
  * github UI too 
  */
-[data-theme='light'] img[src$='#gh-dark-mode-only'],
-[data-theme='dark'] img[src$='#gh-light-mode-only'] {
+[data-theme="light"] img[src$="#gh-dark-mode-only"],
+[data-theme="dark"] img[src$="#gh-light-mode-only"] {
   display: none;
 }
