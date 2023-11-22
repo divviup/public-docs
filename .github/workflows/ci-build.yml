@@ -19,7 +19,7 @@ jobs:
     outputs:
       head: ${{ steps.head.outputs.head }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Check out the branch that the PR refers to, so the git HEAD isn't detached.
           ref: ${{ github.event.pull_request.head.ref }}
@@ -48,7 +48,7 @@ jobs:
       statuses: write
     needs: [format]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Check out the HEAD from the previous workflow, to catch any mistakes that the formatter
           # may have introduced.
