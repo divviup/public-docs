@@ -23,7 +23,7 @@ jobs:
         with:
           # Check out the branch that the PR refers to, so the git HEAD isn't detached.
           ref: ${{ github.event.pull_request.head.ref }}
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: yarn
@@ -53,7 +53,7 @@ jobs:
           # Check out the HEAD from the previous workflow, to catch any mistakes that the formatter
           # may have introduced.
           ref: "${{ needs.format.outputs.head }}"
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: yarn
