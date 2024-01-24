@@ -27,16 +27,17 @@ and troubleshooting techniques follows.
 
 ### Aggregation Job Deleted
 
-This error occurs if a Janus helper receives a request to initialize or
-continue an aggregation job that has been deleted.
+This error occurs if a Janus helper receives a request to initialize or continue
+an aggregation job that has been deleted.
 
 The [DAP specification][agg-job-deletion] states that if a leader must abandon
 an aggregation job, it should delete that resource in the helper to let it clean
 up its resources. The Janus leader does this, and the Janus helper supports
-`DELETE` requests on an aggregation job URI. Deleted aggregation jobs may not
-be acted upon further and any further attempts to run that job will fail.
+`DELETE` requests on an aggregation job URI. Deleted aggregation jobs may not be
+acted upon further and any further attempts to run that job will fail.
 
-[agg-job-deletion]: https://datatracker.ietf.org/doc/html/draft-ietf-ppm-dap-09#name-helper-continuation
+[agg-job-deletion]:
+  https://datatracker.ietf.org/doc/html/draft-ietf-ppm-dap-09#name-helper-continuation
 
 ### Collection Job Abandoned
 
