@@ -16,8 +16,8 @@ Metrics are monotonic counters that last the lifetime of the task.
 
 :::note
 
-This is a new feature. Tasks created before February 2024 will start counting
-from when the feature was implemented, rather than the lifetime of the task.
+This feature was implemented February 24th, 2024. Tasks created before will
+start counting after then, rather than for the lifetime of the task.
 
 :::
 
@@ -60,7 +60,12 @@ representation.
 
 This is most often caused by task configuration mismatch between the server and
 client. Ensure that all client-side task parameters match those reported by
-Divvi Up.
+Divvi Up. In particular, check for these common configuration mistakes:
+
+- Client's DAP library is using an incorrect DAP version, e.g. library supports
+  DAP-04 when the task supports DAP-07.
+- Using the wrong function, e.g. using `sum` when the task is configured for
+  `count`.
 
 Also referred to as `report_counter_decode_failure` in the Divvi Up API.
 
