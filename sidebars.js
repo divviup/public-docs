@@ -21,6 +21,11 @@ const sidebars = {
           "DAP Client Libraries": [
             {
               type: "link",
+              label: "divviup-android (Java/Android)",
+              href: "https://github.com/divviup/divviup-android",
+            },
+            {
+              type: "link",
               label: "divviup-ts (TypeScript)",
               href: "https://divviup.github.io/divviup-ts",
             },
