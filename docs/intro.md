@@ -6,9 +6,12 @@ sidebar_position: 1
 # Overview
 
 Divvi Up is a privacy preserving metrics platform for collecting aggregate
-statistics. You can use it to gain insights on your user base while respecting
-users' individual privacy, eliminating the need to store PII for telemetry, and
-mitigating compliance risks.
+statistics. Using Divvi Up can help users gain insights into a user base while
+respecting users' individual privacy, eliminating the need to store PII for
+telemetry, and mitigating compliance risks.
 
-This documentation site is a work-in-progress, and will regularly be updated
-with new content.
+The best two places to get started are:
+
+- [How it Works](./how-it-works) - a high level overview of the Divvi Up system
+- [Command Line Tutorial](./command-line-tutorial) - a hands on introduction to
+  the Divvi Up system
