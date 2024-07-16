@@ -28,8 +28,9 @@ Be sure to review your changes after formatting, to make sure that the formatter
 didn't mess up your content. This usually only happens when using the
 [admonition syntax](https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier).
 
-If you want to format your code locally, use:
+If you're submitting a PR from a fork, or otherwise want to format your code
+locally, use:
 
 ```bash
-npx prettier --write <file>
+npx prettier --write .
 ```

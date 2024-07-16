@@ -23,12 +23,21 @@ jobs:
         with:
           # Check out the branch that the PR refers to, so the git HEAD isn't detached.
           ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: yarn
       - run: npx prettier --write .
+      - name: Check if code is unformatted
+        if: github.event.pull_request.head.repo.fork
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Code is not formatted properly. Please format code using 'npx prettier --write .'"
+            exit 1
+          fi
       - name: Push changes
+        if: "!github.event.pull_request.head.repo.fork"
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             # github-actions name and email derived from https://github.com/orgs/community/discussions/26560
@@ -53,6 +62,7 @@ jobs:
           # Check out the HEAD from the previous workflow, to catch any mistakes that the formatter
           # may have introduced.
           ref: "${{ needs.format.outputs.head }}"
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: 18
