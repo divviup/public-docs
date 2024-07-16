@@ -79,15 +79,15 @@ jobs:
       #
       # Workaround this by setting a status check to the new head manually.
       - name: Set status check
-        if: always()
+        if: always() && !github.event.pull_request.head.repo.fork
         env:
           GH_TOKEN: ${{ github.token }}      
         run: |
           gh api \
-            repos/${{ github.event.pull_request.head.repo.full_name }}/commits/${{ needs.format.outputs.head }}/statuses \
+            repos/${{ github.repository }}/commits/${{ needs.format.outputs.head }}/statuses \
             --method POST \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -f state="${{ job.status }}" \
-            -f target_url="${{ github.server_url }}/${{ github.event.pull_request.head.repo.full_name }}/actions/runs/${{ github.run_id }}" \
+            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             -f context="Format and Test"
