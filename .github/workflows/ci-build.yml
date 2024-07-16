@@ -84,7 +84,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}      
         run: |
           gh api \
-            repos/${{ github.repository }}/commits/${{ needs.format.outputs.head }}/statuses \
+            repos/${{ github.event.pull_request.head.repo.full_name }}/commits/${{ needs.format.outputs.head }}/statuses \
             --method POST \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
