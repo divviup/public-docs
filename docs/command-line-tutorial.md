@@ -212,10 +212,9 @@ Saved new collector credential to /your/current/directory/collector-credential-1
 
 :::warning
 
-This credential isn't sensitive because it's only useful in your local
-instance of Divvi Up. But collector credentials generated against the production
-service should be carefully managed. Consider using a password manager to
-protect them.
+This credential isn't sensitive because it's only useful in your local instance
+of Divvi Up. But collector credentials generated against the production service
+should be carefully managed. Consider using a password manager to protect them.
 
 :::
 
