@@ -29,11 +29,9 @@ To get started, you'll need:
 
 ### Install `divviup`
 
-`divviup` is a command line (CLI) tool for doing all basic operations on both
-the Divvi Up API and Distributed Aggregation Protocol (DAP) API endpoints. It's
-only likely to work if the leader aggregator is
-[Janus](https://github.com/divviup/janus). See `divviup --help` for details on
-all of the commands.
+`divviup` is a command line (CLI) tool for doing basic operations on the Divvi
+Up and Distributed Aggregation Protocol (DAP) API endpoints. See
+`divviup --help` for details on all of the commands.
 
 The tool is available for download for macOS, Windows or Linux from the
 [divviup-api releases page](https://github.com/divviup/divviup-api/releases).
@@ -212,10 +210,14 @@ The output will be like:
 Saved new collector credential to /your/current/directory/collector-credential-144.json. Keep this file safe!
 ```
 
-**Note**: This credential isn't sensitive because it's only useful in your local
+:::warning
+
+This credential isn't sensitive because it's only useful in your local
 instance of Divvi Up. But collector credentials generated against the production
 service should be carefully managed. Consider using a password manager to
 protect them.
+
+:::
 
 Make a note of the path where the credential was saved, and save the collector
 credential ID to an environment variable.
