@@ -89,5 +89,5 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -f state="${{ job.status }}" \
-            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            -f target_url="${{ github.server_url }}/${{ github.event.pull_request.head.repo.full_name }}/actions/runs/${{ github.run_id }}" \
             -f context="Format and Test"
