@@ -78,6 +78,8 @@ jobs:
       # receives its workflow status.
       #
       # Workaround this by setting a status check to the new head manually.
+      #
+      # This does not work for forked repositories.
       - name: Set status check
         if: always() && !github.event.pull_request.head.repo.fork
         env:
