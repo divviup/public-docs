@@ -8,9 +8,10 @@ Learn how Divvi Up works and how it protects privacy.
 
 ## Breakdown
 
-Divvi Up ingests measurements and aggregates them, while protecting the privacy
-of each individual measurement. This can be broadly broken down into several
-steps, described in the following sections.
+Divvi Up ingests and aggregates telemetric data while protecting the privacy of
+each individual measurement. Example use cases might be application metrics,
+survey results, or machine learning data. The process can be broadly broken down
+into several steps, described in the following sections.
 
 <!-- TODO(inahga): Consider making this a more detailed `mermaid` diagram -->
 
@@ -47,9 +48,9 @@ For each measurement, the subsequent steps are performed.
 
 ### Step 2: Client shards the measurement
 
-The app uses the DAP client library to randomly shard the measurement into two
-parts, known as report shares. One report share is for the leader aggregator,
-and the other for the helper aggregator.
+The app uses the DAP client library to randomly shard the telemetric data,
+called a measurement, into two parts, known as report shares. One report share
+is for the leader aggregator, and the other for the helper aggregator.
 
 The client library encrypts each share with a public key advertised by the
 respective aggregator.
