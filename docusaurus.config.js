@@ -9,7 +9,7 @@ const darkTheme = themes.dracula;
 const config = {
   title: "Divvi Up",
   tagline:
-    "Documentation site for Divvi Up, a privacy-respecting system for aggregate statistics.",
+    "Documentation site for Divvi Up, a privacy-respecting telemetry service for metrics or machine learning.",
   favicon: "favicon.png",
 
   // Set the production url of your site here

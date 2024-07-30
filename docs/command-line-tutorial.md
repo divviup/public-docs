@@ -192,7 +192,7 @@ export HELPER_ID=96301951-c848-4a57-b4f5-32812e4db1be
 ## Collector Credential
 
 Next, generate a collector-credential for the task. The collector credential
-will be used by the collector to export the aggregated statistics.
+will be used by the collector to export the aggregated telemetry.
 
 ```sh
 divviup collector-credential generate --save
