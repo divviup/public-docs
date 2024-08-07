@@ -67,6 +67,7 @@ const config = {
         logo: {
           alt: "Divvi Up Logo",
           src: "logo.svg",
+          href: "https://divviup.org/",
         },
         items: [
           {
