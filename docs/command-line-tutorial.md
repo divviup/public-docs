@@ -303,6 +303,10 @@ for i in {1..150}; do
 done
 ```
 
+Note that the random measurements will only be between 0 and 9 inclusive, while
+the buckets were created for measurements between 0 and 10 inclusive. This will
+leave the "10" bucket empty for demonstration purposes.
+
 Wait a little while to let the aggregators run the aggregation jobs. Then, get
 collection results:
 
