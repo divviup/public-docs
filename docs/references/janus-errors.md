@@ -25,6 +25,18 @@ The `type` field defines a URN that is defined in the [DAP specification][1].
 Some errors that Janus encounter are not defined in DAP. A list of these errors
 and troubleshooting techniques follows.
 
+### Aggregation Job Abandoned
+
+This error occurs if a Janus leader receives a request to act on an aggregation
+job that has been abandoned. Such jobs are no longer being processed, and can
+no longer be collected for.
+
+The [DAP specification][agg-job-deletion] states that if a leader must abandon
+an aggregation job, it should delete that resource in the helper to let it clean
+up its resources. The Janus leader does this, and the Janus helper supports
+`DELETE` requests on an aggregation job URI. Deleted aggregation jobs may not be
+acted upon further and any further attempts to run that job will fail.
+
 ### Aggregation Job Deleted
 
 This error occurs if a Janus helper receives a request to initialize or continue
