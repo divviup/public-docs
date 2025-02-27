@@ -28,8 +28,8 @@ and troubleshooting techniques follows.
 ### Aggregation Job Abandoned
 
 This error occurs if a Janus leader receives a request to act on an aggregation
-job that has been abandoned. Such jobs are no longer being processed, and can
-no longer be collected for.
+job that has been abandoned. Such jobs are no longer being processed, and can no
+longer be collected for.
 
 The [DAP specification][agg-job-deletion] states that if a leader must abandon
 an aggregation job, it should delete that resource in the helper to let it clean
