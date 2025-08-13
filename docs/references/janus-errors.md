@@ -49,9 +49,9 @@ acted upon further and any further attempts to run that job will fail.
 
 This error occurs if a Janus helper receives an asynchronous polling request for
 an Aggregate Share that does not exist, or was deleted. This indicates a state
-mismatch between the leader and helper during collection processing. The collection
-job may be in a stuck state, unable to complete. Retrying the collection with a new
-job may work correctly.
+mismatch between the leader and helper during collection processing. The
+collection job may be in a stuck state, unable to complete. Retrying the
+collection with a new job may work correctly.
 
 If this happens consistently, there may be a bug in either the leader or helper.
 
