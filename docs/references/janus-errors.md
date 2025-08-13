@@ -45,6 +45,16 @@ acted upon further and any further attempts to run that job will fail.
 [agg-job-deletion]:
   https://datatracker.ietf.org/doc/html/draft-ietf-ppm-dap-09#name-helper-continuation
 
+### Aggregate Share ID Unrecognized
+
+This error occurs if a Janus helper receives an asynchronous polling request for
+an Aggregate Share that does not exist, or was deleted. This indicates a state
+mismatch between the leader and helper during collection processing. The
+collection job may be in a stuck state, unable to complete. Retrying the
+collection with a new job may work correctly.
+
+If this happens consistently, there may be a bug in either the leader or helper.
+
 ### Collection Job Abandoned
 
 A Janus leader aggregator returns this error when it abandons a collection job.
