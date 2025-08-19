@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.8.1">
 <title data-rh="true">Operational Metrics | Divvi Up</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://docs.divviup.org/product-documentation/operational-metrics"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Operational Metrics | Divvi Up"><meta data-rh="true" name="description" content="Observe how Divvi Up is working."><meta data-rh="true" property="og:description" content="Observe how Divvi Up is working."><link data-rh="true" rel="icon" href="/favicon.png"><link data-rh="true" rel="canonical" href="https://docs.divviup.org/product-documentation/operational-metrics"><link data-rh="true" rel="alternate" href="https://docs.divviup.org/product-documentation/operational-metrics" hreflang="en"><link data-rh="true" rel="alternate" href="https://docs.divviup.org/product-documentation/operational-metrics" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Product Documentation","item":"https://docs.divviup.org/product-documentation/"},{"@type":"ListItem","position":2,"name":"Operational Metrics","item":"https://docs.divviup.org/product-documentation/operational-metrics"}]}</script><link rel="stylesheet" href="/assets/css/styles.79675e3e.css">
-<script src="/assets/js/runtime~main.55939377.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.c2225dee.js" defer="defer"></script>
 <script src="/assets/js/main.18db4b67.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -23,7 +23,7 @@ start counting after then, rather than for the lifetime of the task.</p></div></
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="successful-uploads">Successful Uploads<a href="#successful-uploads" class="hash-link" aria-label="Direct link to Successful Uploads" title="Direct link to Successful Uploads">​</a></h3>
 <p>Indicates reports successfully ingested by the leader. Reports contributing to
 this count are eligible for aggregation and collection. Use the rate of this
-counter to inform many reports this task gets over time.</p>
+counter to inform how many reports this task gets over time.</p>
 <p>Also referred to as <code>report_counter_success</code> in the Divvi Up API.</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="upload-errors">Upload Errors<a href="#upload-errors" class="hash-link" aria-label="Direct link to Upload Errors" title="Direct link to Upload Errors">​</a></h3>
 <p>Aggregators count some DAP-level errors that lead to report rejection. Rejected
@@ -83,7 +83,109 @@ to fully eliminate this error.</p>
 <p>Indicates there were reports sent to this task after it had expired.</p>
 <p>Use this metric to monitor clients migrating off of the expired task.</p>
 <p>Also referred to as <code>report_counter_task_expired</code> in the Divvi Up API.</p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="api-access">API Access<a href="#api-access" class="hash-link" aria-label="Direct link to API Access" title="Direct link to API Access">​</a></h3>
-<p>Use <code>GET /tasks/{task_id}</code> to retrieve upload metrics from the API.</p></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col"><a href="https://github.com/divviup/public-docs/tree/main/docs/product-documentation/operational-metrics.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/product-documentation/categorical-histogram-dap-04"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Emulating Categorical Histograms with DAP draft-04</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/references/"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">References</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#upload-metrics" class="table-of-contents__link toc-highlight">Upload Metrics</a><ul><li><a href="#successful-uploads" class="table-of-contents__link toc-highlight">Successful Uploads</a></li><li><a href="#upload-errors" class="table-of-contents__link toc-highlight">Upload Errors</a><ul><li><a href="#interval-collected-failure" class="table-of-contents__link toc-highlight">Interval Collected Failure</a></li><li><a href="#decode-failure" class="table-of-contents__link toc-highlight">Decode Failure</a></li><li><a href="#decrypt-failure" class="table-of-contents__link toc-highlight">Decrypt Failure</a></li><li><a href="#report-expired-failure" class="table-of-contents__link toc-highlight">Report Expired Failure</a></li><li><a href="#outdated-key-failure" class="table-of-contents__link toc-highlight">Outdated Key Failure</a></li><li><a href="#report-too-early-failure" class="table-of-contents__link toc-highlight">Report Too Early Failure</a></li><li><a href="#task-expired-failure" class="table-of-contents__link toc-highlight">Task Expired Failure</a></li></ul></li><li><a href="#api-access" class="table-of-contents__link toc-highlight">API Access</a></li></ul></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 Internet Security Research Group. Built with Docusaurus.</div></div></div></footer></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="aggregation-job-metrics">Aggregation Job Metrics<a href="#aggregation-job-metrics" class="hash-link" aria-label="Direct link to Aggregation Job Metrics" title="Direct link to Aggregation Job Metrics">​</a></h2>
+<p>Divvi Up records metrics on reports being prepared for aggregation in each task.
+These work much the same way as upload metrics: they are reported via the task
+leader and are monotonic counters lasting the lifetime of a task.</p>
+<p>These metrics record failures that can occur even if a report is successfully
+uploaded to the leader. In particular, errors in the task&#x27;s helper are relayed
+to Divvi Up via this mechanism. This works for any helper conforming to the
+<a href="https://datatracker.ietf.org/doc/draft-ietf-ppm-dap/" target="_blank" rel="noopener noreferrer">Distributed Aggregation Protocol</a>, not just Divvi Up&#x27;s aggregator.</p>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>note</div><div class="admonitionContent_BuS1"><p>This feature was implemented August 14, 2025. Tasks created before will start
+counting after then, rather than for the lifetime of the task.</p></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="successful-report-preparations">Successful Report Preparations<a href="#successful-report-preparations" class="hash-link" aria-label="Direct link to Successful Report Preparations" title="Direct link to Successful Report Preparations">​</a></h3>
+<p>Indicates reports successfully prepared by the aggregators. Reports contributing
+to this count are eligible for collection.</p>
+<p>Also referred to as <code>aggregation_job_counter_success</code> in the Divvi Up API.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="aggregation-errors">Aggregation Errors<a href="#aggregation-errors" class="hash-link" aria-label="Direct link to Aggregation Errors" title="Direct link to Aggregation Errors">​</a></h3>
+<p>Aggregators count some DAP-level errors that lead to report rejection. Rejected
+reports are not processed any further.</p>
+<p>See sections below for a description and basic troubleshooting steps for each
+error type.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="batch-collected-helper-failure">Batch Collected (Helper) Failure<a href="#batch-collected-helper-failure" class="hash-link" aria-label="Direct link to Batch Collected (Helper) Failure" title="Direct link to Batch Collected (Helper) Failure">​</a></h4>
+<p>Indicates there were reports rejected by the helper because they had timestamps
+corresponding to time intervals that were already collected. This is only
+applicable for tasks with a query type of time interval.</p>
+<p>Seeing this error originating in the helper is very unusual, since the leader is
+also responsible for rejecting reports that fall into collected batches and
+should not be including them in aggregation jobs to begin with. Thus this error
+indicates a misconfiguration or perhaps implementation error in either or both
+aggregators.</p>
+<p>Also referred to as <code>aggregation_job_counter_helper_batch_collected</code> in the
+Divvi Up API.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="report-replayed-helper-failure">Report Replayed (Helper) Failure<a href="#report-replayed-helper-failure" class="hash-link" aria-label="Direct link to Report Replayed (Helper) Failure" title="Direct link to Report Replayed (Helper) Failure">​</a></h4>
+<p>Indicates that there were reports rejected by the helper because their report ID
+had already been aggregated. This could indicate misconfiguration in the clients
+contributing to the task or an unsuccessful attempt to skew aggregations.</p>
+<p>You may wish to contact the helper operator for further troubleshooting.</p>
+<p>Also referred to as <code>aggregation_job_counter_helper_report_replayed</code> in the
+Divvi Up API.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="report-dropped-helper-failure">Report Dropped (Helper) Failure<a href="#report-dropped-helper-failure" class="hash-link" aria-label="Direct link to Report Dropped (Helper) Failure" title="Direct link to Report Dropped (Helper) Failure">​</a></h4>
+<p>Indicates that the helper rejected a report because the leader removed it from
+an aggregation job. Check on errors reported from the task&#x27;s leader.</p>
+<p>This error can only occur when using VDAFs that require multiple rounds of
+preparation, which is not the case for the Prio3 family of VDAFs.</p>
+<p>You may wish to contact the helper operator for further troubleshooting.</p>
+<p>Also referred to as <code>aggregation_job_counter_helper_report_dropped</code> in the Divvi
+Up API.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="unknown-hpke-config-id-helper-failure">Unknown HPKE Config ID (Helper) Failure<a href="#unknown-hpke-config-id-helper-failure" class="hash-link" aria-label="Direct link to Unknown HPKE Config ID (Helper) Failure" title="Direct link to Unknown HPKE Config ID (Helper) Failure">​</a></h4>
+<p>Indicates that reports were rejected because they were encrypted with an HPKE
+configuration that the helper does not recognize, making them impossible to
+decrypt.</p>
+<p>This indicates that the leader was able to decrypt its report share during
+upload, but the helper failed during preparation. This suggests a configuration
+problem with the helper&#x27;s advertised HPKE configurations or with the task&#x27;s
+clients.</p>
+<p>You may wish to contact the helper operator for further troubleshooting.</p>
+<p>Also referred to as <code>aggregation_job_counter_helper_hpke_unknown_config_id</code> in
+the Divvi Up API.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="hpke-decryption-helper-failure">HPKE Decryption (Helper) Failure<a href="#hpke-decryption-helper-failure" class="hash-link" aria-label="Direct link to HPKE Decryption (Helper) Failure" title="Direct link to HPKE Decryption (Helper) Failure">​</a></h4>
+<p>Indicates that reports were rejected because the helper was unable to decrypt
+them.</p>
+<p>This indicates that the leader was able to decrypt its report share during
+upload, but the helper failed during preparation. This suggests a configuration
+problem with the helper&#x27;s advertised HPKE configurations or with the task&#x27;s
+clients. It could also indicate a problem with the HPKE implementations in the
+clients or the helper.</p>
+<p>You may wish to contact the helper operator for further troubleshooting.</p>
+<p>Also referred to as <code>aggregation_job_counter_helper_hpke_decrypt_failure</code> in the
+Divvi Up API.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="vdaf-preparation-helper-failure">VDAF Preparation (Helper) Failure<a href="#vdaf-preparation-helper-failure" class="hash-link" aria-label="Direct link to VDAF Preparation (Helper) Failure" title="Direct link to VDAF Preparation (Helper) Failure">​</a></h4>
+<p>Indicates that reports were rejected by the helper because VDAF preparation
+failed. This could be caused by malicious clients trying to inject invalid
+reports or a task configuration problem. Make sure that the client implements
+the right version of <a href="https://datatracker.ietf.org/doc/draft-ietf-ppm-dap/" target="_blank" rel="noopener noreferrer">DAP</a> and that the correct task parameters are in use.</p>
+<p>You may wish to contact the helper operator for further troubleshooting.</p>
+<p>Also referred to as <code>aggregation_job_counter_helper_vdaf_prep_error</code> in the
+Divvi Up API.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="task-expiration-helper-failure">Task Expiration (Helper) Failure<a href="#task-expiration-helper-failure" class="hash-link" aria-label="Direct link to Task Expiration (Helper) Failure" title="Direct link to Task Expiration (Helper) Failure">​</a></h4>
+<p>Indicates there were reports rejected by the helper because they were sent to
+this task after it had expired.</p>
+<p>Use this metric to monitor clients migrating off of the expired task.</p>
+<p>You may wish to contact the helper operator for further troubleshooting.</p>
+<p>Also referred to as <code>aggregation_job_counter_helper_task_expired</code> in the Divvi
+Up API.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="invalid-message-helper-failure">Invalid Message (Helper) Failure<a href="#invalid-message-helper-failure" class="hash-link" aria-label="Direct link to Invalid Message (Helper) Failure" title="Direct link to Invalid Message (Helper) Failure">​</a></h4>
+<p>Indicates that the helper rejected reports because of incorrectly constructed or
+encoded messages.</p>
+<p>This can be caused by configuration problems in the client. Make sure that the
+client implements the right version of <a href="https://datatracker.ietf.org/doc/draft-ietf-ppm-dap/" target="_blank" rel="noopener noreferrer">DAP</a> and that the correct task
+parameters are in use.</p>
+<p>You may wish to contact the helper operator for further troubleshooting.</p>
+<p>Also referred to as <code>aggregation_job_counter_helper_invalid_message</code> in the
+Divvi Up API.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="report-too-early-helper-failure">Report Too Early (Helper) Failure<a href="#report-too-early-helper-failure" class="hash-link" aria-label="Direct link to Report Too Early (Helper) Failure" title="Direct link to Report Too Early (Helper) Failure">​</a></h4>
+<p>Indicates that there were reports rejected by the helper because their timestamp
+was too far in the future.</p>
+<p>Depending on how the client derives the report timestamp, it may not be possible
+to fully eliminate this error.</p>
+<p>You may wish to contact the helper operator for further troubleshooting.</p>
+<p>Also referred to as <code>aggregation_job_counter_helper_report_too_early</code> in the
+Divvi Up API.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="api-access">API Access<a href="#api-access" class="hash-link" aria-label="Direct link to API Access" title="Direct link to API Access">​</a></h2>
+<p>Use <code>GET /tasks/{task_id}</code> to retrieve upload metrics from the API. You can also
+use the <code>divviup</code> CLI to get a task&#x27;s metrics, among other information about a
+task:</p>
+<div class="language-sh codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-sh codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">divviup --token &lt;AUTH_TOKEN&gt; \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  --account-id &lt;ACCOUNT_ID&gt; \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  task get &lt;TASK_ID&gt;</span><br></span></code></pre></div></div></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col"><a href="https://github.com/divviup/public-docs/tree/main/docs/product-documentation/operational-metrics.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/product-documentation/categorical-histogram-dap-04"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Emulating Categorical Histograms with DAP draft-04</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/references/"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">References</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#upload-metrics" class="table-of-contents__link toc-highlight">Upload Metrics</a><ul><li><a href="#successful-uploads" class="table-of-contents__link toc-highlight">Successful Uploads</a></li><li><a href="#upload-errors" class="table-of-contents__link toc-highlight">Upload Errors</a><ul><li><a href="#interval-collected-failure" class="table-of-contents__link toc-highlight">Interval Collected Failure</a></li><li><a href="#decode-failure" class="table-of-contents__link toc-highlight">Decode Failure</a></li><li><a href="#decrypt-failure" class="table-of-contents__link toc-highlight">Decrypt Failure</a></li><li><a href="#report-expired-failure" class="table-of-contents__link toc-highlight">Report Expired Failure</a></li><li><a href="#outdated-key-failure" class="table-of-contents__link toc-highlight">Outdated Key Failure</a></li><li><a href="#report-too-early-failure" class="table-of-contents__link toc-highlight">Report Too Early Failure</a></li><li><a href="#task-expired-failure" class="table-of-contents__link toc-highlight">Task Expired Failure</a></li></ul></li></ul></li><li><a href="#aggregation-job-metrics" class="table-of-contents__link toc-highlight">Aggregation Job Metrics</a><ul><li><a href="#successful-report-preparations" class="table-of-contents__link toc-highlight">Successful Report Preparations</a></li><li><a href="#aggregation-errors" class="table-of-contents__link toc-highlight">Aggregation Errors</a><ul><li><a href="#batch-collected-helper-failure" class="table-of-contents__link toc-highlight">Batch Collected (Helper) Failure</a></li><li><a href="#report-replayed-helper-failure" class="table-of-contents__link toc-highlight">Report Replayed (Helper) Failure</a></li><li><a href="#report-dropped-helper-failure" class="table-of-contents__link toc-highlight">Report Dropped (Helper) Failure</a></li><li><a href="#unknown-hpke-config-id-helper-failure" class="table-of-contents__link toc-highlight">Unknown HPKE Config ID (Helper) Failure</a></li><li><a href="#hpke-decryption-helper-failure" class="table-of-contents__link toc-highlight">HPKE Decryption (Helper) Failure</a></li><li><a href="#vdaf-preparation-helper-failure" class="table-of-contents__link toc-highlight">VDAF Preparation (Helper) Failure</a></li><li><a href="#task-expiration-helper-failure" class="table-of-contents__link toc-highlight">Task Expiration (Helper) Failure</a></li><li><a href="#invalid-message-helper-failure" class="table-of-contents__link toc-highlight">Invalid Message (Helper) Failure</a></li><li><a href="#report-too-early-helper-failure" class="table-of-contents__link toc-highlight">Report Too Early (Helper) Failure</a></li></ul></li></ul></li><li><a href="#api-access" class="table-of-contents__link toc-highlight">API Access</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 Internet Security Research Group. Built with Docusaurus.</div></div></div></footer></div>
 </body>
 </html>
