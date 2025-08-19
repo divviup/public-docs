@@ -153,19 +153,15 @@ error type.
 
 #### Batch Collected (Helper) Failure
 
-Indicates there were reports rejected by the helper becuase they had timestamps
+Indicates there were reports rejected by the helper because they had timestamps
 corresponding to time intervals that were already collected. This is only
 applicable for tasks with a query type of time interval.
 
-The rate of this error depends on the accuracy of the client time source, and
-how long the collector waits after a time interval has passed before collecting
-it. Use the rate to inform how long you should wait before collecting a time
-interval.
-
-Depending on how the client derives the report timestamp, it may not be possible
-to fully eliminate this error.
-
-You may wish to contact the helper operator for further troubleshooting.
+Seeing this error originating in the helper is very unusual, since the leader is
+also responsible for rejecting reports that fall into collected batches and
+should not be including them in aggregation jobs to begin with. Thus this error
+indicates a misconfiguration or perhaps implementation error in either or both
+aggregators.
 
 Also referred to as `aggregation_job_counter_helper_batch_collected` in the
 Divvi Up API.
