@@ -78,5 +78,5 @@ header, if provided.
 ### Request Timeout
 
 This error indicates the Janus aggregator could not service this request within
-a timeout bounds, and it was cancelled by the aggregator. The client should retry
-this request, respecting the HTTP `Retry-After` header, if provided.
+a timeout bounds, and it was cancelled by the aggregator. The client should
+retry this request, respecting the HTTP `Retry-After` header, if provided.
