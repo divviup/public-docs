@@ -68,3 +68,15 @@ working correctly and reachable.
 Rarely, this error indicates a bug in Janus.
 
 You should contact the Janus operators for assistance.
+
+### Too Many Requests
+
+This error indicates the application is unable to service more requests at this
+time, and the client should retry again soon, respecting the HTTP `Retry-After`
+header, if provided.
+
+### Request Timeout
+
+This error indicates the Janus aggregator could not service this request within
+a timeout bounds, and it was cancelled by the aggregator. The client should retry
+this request, respecting the HTTP `Retry-After` header, if provided.
