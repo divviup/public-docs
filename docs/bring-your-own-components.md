@@ -1,0 +1,1212 @@
+---
+sidebar_position: 50
+title: Bring Your Own Components
+toc_max_heading_level: 5
+---
+
+# Bring Your Own Components
+
+This section details how to run your own Divvi Up aggregator, or even
+your own instance of the Divvi Up application, using two methods: by
+running a
+[Docker Compose](https://docs.docker.com/compose/)
+deployment on an existing machine, or by running a
+[Terraform](https://www.terraform.io/)
+deployment to provision a cloud machine.
+
+## Prerequisites
+
+1. You should usually be working in a Unix-like environment such as
+   Linux or macOS, with a typical shell such as Bash or Zsh.
+   It's also possible to work in a Windows environment using a Unix-like
+   layer such as WSL2 or Cygwin.
+
+2. If you're planning to run a Docker Compose deployment, you should
+   have Docker version 25.0.0 or later installed.
+   If you're only planning to run a Terraform deployment, you may still
+   want to install Docker for ad hoc testing purposes.
+
+    1. You can find instructions for installing Docker
+       [here](https://docs.docker.com/engine/install/).
+
+    2. You can check your Docker version by running `docker --version`.
+
+    3. You can check that your Docker installation is working correctly
+       by running `docker run --rm hello-world`, which should output a
+       message saying that everything is working correctly.
+
+3. If you're planning to run a Terraform deployment, you should have
+   Terraform version 1.9.0 or later installed.
+
+    1. You can find instructions for installing Terraform
+       [here](https://developer.hashicorp.com/terraform/install).
+
+    2. You can check your Terraform version by running
+       `terraform version`.
+
+4. You should have [`jq`](https://jqlang.org/) version 1.7 or later
+   installed.
+
+    1. You can find instructions for installing `jq`
+       [here](https://jqlang.org/download/).
+
+    2. You can check your `jq` version by running `jq --version`.
+
+5. Download the latest `divviup-bring-your-own.tar.gz` file from the
+   [divviup-api releases page](https://github.com/divviup/divviup-api/releases).
+
+## Docker Compose Deployment
+
+The fundamental way to run your own aggregator or application is by
+running a Docker Compose deployment.
+Even if you're only planning to run a Terraform deployment, the cloud
+machine will still run a Docker Compose deployment, so it's still
+important to understand it.
+
+Start by extracting the `divviup-bring-your-own.tar.gz` file you
+downloaded in the [Prerequisites](#prerequisites) section.
+The extracted structure is as follows:
+
+```
+divviup-bring-your-own
+|-- aggregator
+|   |-- .env
+|   |-- docker-compose.yml
+|   `-- generate-keys.sh
+|-- application
+|   |-- .env
+|   |-- docker-compose.yml
+|   `-- generate-keys.sh
+`-- terraform
+    |-- aws.tf
+    |-- aws.tfvars
+    |-- (...other .tf/tfvars files...)
+    `-- provision.bash
+```
+
+The `aggregator` and `application` directories contain everything you
+need to run your own aggregator or application, respectively, using a
+Docker Compose deployment.
+You can ignore the `terraform` directory for now, as it is not needed to
+run a Docker Compose deployment.
+
+To run the aggregator or application, take the following steps:
+
+1. `cd` into the `aggregator` or `application` directory, whichever one
+   you want to run.
+
+2. Run `sh generate-keys.sh` to initialize the security-related
+   environment variables in the `.env` file with freshly generated keys.
+
+3. Customize the environment variables in the `.env` file as desired.
+   For more information, see the
+   [Aggregator Environment Variables](#aggregator-environment-variables)
+   and
+   [Application Environment Variables](#application-environment-variables)
+   sections.
+
+4. Run `docker compose create` to create the deployment.
+
+5. Freely run `docker compose start` and `docker compose stop` to start
+   and stop the deployment.
+
+6. Eventually, run `docker compose down` to destroy the deployment.
+
+### Aggregator Environment Variables
+
+This section describes the environment variables that can be customized
+in the `.env` file for the aggregator.
+
+By default, the `.env` file is configured to run the aggregator in a
+local test setup.
+The aggregator will listen for HTTP connections on `0.0.0.0:9001`, and
+it will use `host.docker.internal:9001` as its public address.
+
+#### `ACME_CA_URI` {#agg-acme-ca-uri}
+
+The ACME API endpoint to use for HTTPS certificate acquisitions and
+renewals.
+
+If
+[`COMPOSE_PROFILES`](#agg-compose-profiles)
+is not `https`, this value will be ignored.
+
+By default, this is the production endpoint provided by
+[Let's Encrypt](https://letsencrypt.org/)
+(`https://acme-v02.api.letsencrypt.org/directory`).
+The production endpoint has fairly restrictive rate limiting, so if
+you're only testing and anticipating bringing your deployment up and
+down repeatedly, you can temporarily set this to the staging endpoint
+(`https://acme-staging-v02.api.letsencrypt.org/directory`), which has
+much more relaxed rate limiting.
+However, note that certificates generated by the staging endpoint are
+only signed by a staging certificate authority that generally isn't
+trusted by default by most systems (including browsers), so you may
+encounter difficulties when actually trying to perform HTTPS requests.
+
+#### `ACME_COMPANION_IMAGE` {#agg-acme-companion-image}
+
+The Docker image to use for the
+[acme-companion](https://github.com/nginx-proxy/acme-companion)
+container that helps implement HTTPS.
+
+#### `AGGREGATOR_API_AUTH_TOKENS` {#agg-aggregator-api-auth-tokens}
+
+A comma-separated list of bearer tokens that will be authorized to use
+the aggregator API.
+
+This will be initially generated by the `generate-keys.sh` script.
+
+#### `AGGREGATOR_API_PATH_PREFIX` {#agg-aggregator-api-path-prefix}
+
+The path prefix to use for the aggregator API, without any leading or
+trailing slash.
+
+#### `COMPOSE_PROFILES` {#agg-compose-profiles}
+
+Either `http` or `https`.
+
+Under the `http` profile, the aggregator will only listen for HTTP
+connections.
+
+Under the `https` profile, the aggregator will listen for HTTP and HTTPS
+connections, it will redirect HTTP to HTTPS, and it will automatically
+acquire and renew an HTTPS certificate.
+
+#### `DATASTORE_KEYS` {#agg-datastore-keys}
+
+A key to use for database encryption.
+
+This will be generated by the `generate-keys.sh` script.
+
+#### `HTTPS_ADMIN_EMAIL` {#agg-https-admin-email}
+
+The email address to use as your administrative contact email address
+when acquiring and renewing HTTPS certificates.
+
+If
+[`COMPOSE_PROFILES`](#agg-compose-profiles)
+is not `https`, this value will be ignored.
+
+#### `JANUS_AGGREGATOR_IMAGE` {#agg-janus-aggregator-image}
+
+The Docker image to use for the Janus container.
+
+The version tag should usually match the version tag used for
+[`JANUS_MIGRATOR_IMAGE`](#agg-janus-migrator-image).
+
+#### `JANUS_MIGRATOR_IMAGE` {#agg-janus-migrator-image}
+
+The Docker image to use for the Janus migrator container.
+
+The version tag should usually match the version tag used for
+[`JANUS_AGGREGATOR_IMAGE`](#agg-janus-aggregator-image).
+
+#### `LISTEN_HOST` {#agg-listen-host}
+
+The hostname of the local network interface to listen on for HTTP and
+HTTPS connections.
+
+The default value is `0.0.0.0`, which means to listen on all local
+network interfaces.
+
+There's usually no reason to change this unless you have a complex
+network setup and you need to restrict the listening to one particular
+local network interface.
+
+#### `LISTEN_PORT_HTTP` {#agg-listen-port-http}
+
+The port to listen on for HTTP connections to the aggregator.
+
+You should usually keep this set to the same value as
+[`PUBLIC_PORT_HTTP`](#agg-public-port-http).
+You should only need to set them to different values if you have a
+complex network setup that uses port mapping.
+
+#### `LISTEN_PORT_HTTPS` {#agg-listen-port-https}
+
+The port to listen on for HTTPS connections to the aggregator.
+
+If
+[`COMPOSE_PROFILES`](#agg-compose-profiles)
+is not `https`, this value will be ignored.
+
+You should usually keep this set to the same value as
+[`PUBLIC_PORT_HTTPS`](#agg-public-port-https).
+You should only need to set them to different values if you have a
+complex network setup that uses port mapping.
+
+#### `MAX_AGGREGATION_JOB_SIZE` {#agg-max-aggregation-job-size}
+
+The maximum number of client reports to include in an aggregation job.
+
+#### `MIN_AGGREGATION_JOB_SIZE` {#agg-min-aggregation-job-size}
+
+The minimum number of client reports to include in an aggregation job.
+
+#### `NGINX_PROXY_IMAGE` {#agg-nginx-proxy-image}
+
+The Docker image to use for the
+[nginx-proxy](https://github.com/nginx-proxy/nginx-proxy)
+container that helps implement HTTPS.
+
+#### `POSTGRES_DB` {#agg-postgres-db}
+
+The name to use for the Postgres database that stores the aggregator's
+persistent data.
+
+#### `POSTGRES_IMAGE` {#agg-postgres-image}
+
+The Docker image to use for the Postgres container that stores the
+aggregator's persistent data.
+
+#### `POSTGRES_PASSWORD` {#agg-postgres-password}
+
+The password to use for the Postgres container that stores the
+aggregator's persistent data.
+
+This will be generated by the `generate-keys.sh` script.
+
+#### `POSTGRES_USER` {#agg-postgres-user}
+
+The username to use for the Postgres container that stores the
+aggregator's persistent data.
+
+#### `PUBLIC_HOST` {#agg-public-host}
+
+The hostname that any other component, including a user viewing the
+application in a browser, can use to make connections to the aggregator.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is `https`, this value must be an actual public domain or subdomain with
+a DNS record that points to the machine running the Docker Compose
+deployment.
+
+#### `PUBLIC_PORT_HTTP` {#agg-public-port-http}
+
+The port that any other component, including a user viewing the
+application in a browser, can use to make HTTP connections to the
+aggregator.
+
+You should usually keep this set to the same value as
+[`LISTEN_PORT_HTTP`](#agg-listen-port-http).
+You should only need to set them to different values if you have a
+complex network setup that uses port mapping.
+
+#### `PUBLIC_PORT_HTTPS` {#agg-public-port-https}
+
+The port that any other component, including a user viewing the
+application in a browser, can use to make HTTPS connections to the
+aggregator.
+
+If
+[`COMPOSE_PROFILES`](#agg-compose-profiles)
+is not `https`, this value will be ignored.
+
+You should usually keep this set to the same value as
+[`LISTEN_PORT_HTTPS`](#agg-listen-port-https).
+You should only need to set them to different values if you have a
+complex network setup that uses port mapping.
+
+#### `RESTART_POLICY` {#agg-restart-policy}
+
+The restart policy to use for all containers in the deployment.
+
+### Application Environment Variables
+
+This section describes the environment variables that can be customized
+in the `.env` file for the application.
+
+:::note
+
+The application is a single server that handles both _app_ requests and
+_API_ requests.
+The app is the front end, i.e., the interface a user sees when they open
+the application in a browser.
+The API is the back end, i.e., the requests made behind the scenes by
+the app and by other components such as the `divviup` CLI.
+The application distinguishes between app and API requests by using two
+different hostnames for the app and API, and inspecting the hostname
+being used by each incoming request.
+
+The requirement to have two different hostnames pointing at the same
+server can sometimes cause difficulties in private network setups, so a
+helper Docker Compose profile called `http-one-host` will be provided to
+allow the application to instead use a single hostname with two
+different ports to distinguish between the app and API.
+
+:::
+
+By default, the `.env` file is configured to run the application in a
+local test setup.
+The application will listen for HTTP connections to the app and API on
+`0.0.0.0:8080`, and it will use `127.0.0.1:8080` and `127.0.0.2:8080` as
+its public app and API addresses.
+Note that this setup takes advantage of the fact that all addresses in
+the `127.0.0.*` subnet are loopback addresses in order to satisfy the
+application's two-hostname requirement.
+
+#### `ACME_CA_URI` {#app-acme-ca-uri}
+
+The ACME API endpoint to use for HTTPS certificate acquisitions and
+renewals.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is not `https`, this value will be ignored.
+
+By default, this is the production endpoint provided by
+[Let's Encrypt](https://letsencrypt.org/)
+(`https://acme-v02.api.letsencrypt.org/directory`).
+The production endpoint has fairly restrictive rate limiting, so if
+you're only testing and anticipating bringing your deployment up and
+down repeatedly, you can temporarily set this to the staging endpoint
+(`https://acme-staging-v02.api.letsencrypt.org/directory`), which has
+much more relaxed rate limiting.
+However, note that certificates generated by the staging endpoint are
+only signed by a staging certificate authority that generally isn't
+trusted by default by most systems (including browsers), so you may
+encounter difficulties when actually trying to perform HTTPS requests.
+
+#### `ACME_COMPANION_IMAGE` {#app-acme-companion-image}
+
+The Docker image to use for the
+[acme-companion](https://github.com/nginx-proxy/acme-companion)
+container that helps implement HTTPS.
+
+#### `AUTH_CLIENT_ID` {#app-auth-client-id}
+
+The [Auth0](https://auth0.com/) client ID to use.
+
+#### `AUTH_CLIENT_SECRET` {#app-auth-client-secret}
+
+The [Auth0](https://auth0.com/) client secret to use.
+
+#### `AUTH_URL` {#app-auth-url}
+
+The [Auth0](https://auth0.com/) tenant URL to use.
+
+#### `COMPOSE_PROFILES` {#app-compose-profiles}
+
+Either `http-one-host`, `http-two-host`, or `https`.
+
+Under the `http-one-host` profile, the application will only listen for
+HTTP connections, it will use the same public hostname for the app and
+API, and it will use different ports for the app and API.
+All of the following must be true:
+
+* [`PUBLIC_HOST_APP`](#app-public-host-app)
+  and
+  [`PUBLIC_HOST_API`](#app-public-host-api)
+  must be the same.
+* [`PUBLIC_PORT_HTTP_APP`](#app-public-port-http-app)
+  and
+  [`PUBLIC_PORT_HTTP_API`](#app-public-port-http-api)
+  must differ.
+* [`LISTEN_PORT_HTTP_APP`](#app-listen-port-http-app)
+  and
+  [`LISTEN_PORT_HTTP_API`](#app-listen-port-http-api)
+  must differ.
+
+Under the `http-two-host` profile, the application will only listen for
+HTTP connections, it will use different public hostnames for the app and
+API, and it will use the same port for the app and API.
+All of the following must be true:
+
+* [`PUBLIC_HOST_APP`](#app-public-host-app)
+  and
+  [`PUBLIC_HOST_API`](#app-public-host-api)
+  must differ.
+* [`PUBLIC_PORT_HTTP_APP`](#app-public-port-http-app)
+  and
+  [`PUBLIC_PORT_HTTP_API`](#app-public-port-http-api)
+  must be the same.
+* [`LISTEN_PORT_HTTP_APP`](#app-listen-port-http-app)
+  and
+  [`LISTEN_PORT_HTTP_API`](#app-listen-port-http-api)
+  must be the same.
+
+Under the `https` profile, the application will listen for HTTP and
+HTTPS connections, it will use different public hostnames for the app
+and API, it will use the same port for the app and API, it will redirect
+HTTP to HTTPS, and it will automatically acquire and renew HTTPS
+certificates.
+All of the following must be true:
+
+* [`PUBLIC_HOST_APP`](#app-public-host-app)
+  and
+  [`PUBLIC_HOST_API`](#app-public-host-api)
+  must differ.
+* [`PUBLIC_PORT_HTTP_APP`](#app-public-port-http-app)
+  and
+  [`PUBLIC_PORT_HTTP_API`](#app-public-port-http-api)
+  must be the same.
+* [`LISTEN_PORT_HTTP_APP`](#app-listen-port-http-app)
+  and
+  [`LISTEN_PORT_HTTP_API`](#app-listen-port-http-api)
+  must be the same.
+
+#### `DATABASE_ENCRYPTION_KEYS` {#app-database-encryption-keys}
+
+A key to use for database encryption.
+
+This will be generated by the `generate-keys.sh` script.
+
+#### `DIVVIUP_API_IMAGE` {#app-divviup-api-image}
+
+The Docker image to use for the divviup-api container.
+
+The version tag should usually match the version tag used for
+[`DIVVIUP_API_MIGRATOR_IMAGE`](#app-divviup-api-migrator-image).
+
+#### `DIVVIUP_API_MIGRATOR_IMAGE` {#app-divviup-api-migrator-image}
+
+The Docker image to use for the divviup-api migrator container.
+
+The version tag should usually match the version tag used for
+[`DIVVIUP_API_IMAGE`](#app-divviup-api-image).
+
+#### `EMAIL_ADDRESS` {#app-email-address}
+
+The sender email address to use in outgoing notification emails.
+
+#### `HTTPS_ADMIN_EMAIL` {#app-https-admin-email}
+
+The email address to use as your administrative contact email address
+when acquiring and renewing HTTPS certificates.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is not `https`, this value will be ignored.
+
+#### `LISTEN_HOST` {#app-listen-host}
+
+The hostname of the local network interface to listen on for HTTP and
+HTTPS connections.
+
+The default value is `0.0.0.0`, which means to listen on all local
+network interfaces.
+
+There's usually no reason to change this unless you have a complex
+network setup and you need to restrict the listening to one particular
+local network interface.
+
+#### `LISTEN_PORT_HTTP_API` {#app-listen-port-http-api}
+
+The port to listen on for HTTP connections to the API.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is `http-one-host`, this value must be different from
+[`LISTEN_PORT_HTTP_APP`](#app-listen-port-http-app).
+Otherwise, it must be the same.
+
+You should usually keep this set to the same value as
+[`PUBLIC_PORT_HTTP_API`](#app-public-port-http-api).
+You should only need to set them to different values if you have a
+complex network setup that uses port mapping.
+
+#### `LISTEN_PORT_HTTP_APP` {#app-listen-port-http-app}
+
+The port to listen on for HTTP connections to the app.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is `http-one-host`, this value must be different from
+[`LISTEN_PORT_HTTP_API`](#app-listen-port-http-api).
+Otherwise, it must be the same.
+
+You should usually keep this set to the same value as
+[`PUBLIC_PORT_HTTP_APP`](#app-public-port-http-app).
+You should only need to set them to different values if you have a
+complex network setup that uses port mapping.
+
+#### `LISTEN_PORT_HTTPS` {#app-listen-port-https}
+
+The port to listen on for HTTPS connections to the app or API.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is not `https`, this value will be ignored.
+
+You should usually keep this set to the same value as
+[`PUBLIC_PORT_HTTPS`](#app-public-port-https).
+You should only need to set them to different values if you have a
+complex network setup that uses port mapping.
+
+#### `NGINX_IMAGE` {#app-nginx-image}
+
+The Docker image to use for the NGINX container that helps implement the
+`https-one-host` profile.
+
+#### `NGINX_PROXY_IMAGE` {#app-nginx-proxy-image}
+
+The Docker image to use for the
+[nginx-proxy](https://github.com/nginx-proxy/nginx-proxy)
+container that helps implement HTTPS.
+
+#### `POSTGRES_DB` {#app-postgres-db}
+
+The name to use for the Postgres database that stores the application's
+persistent data.
+
+#### `POSTGRES_IMAGE` {#app-postgres-image}
+
+The Docker image to use for the Postgres container that stores the
+application's persistent data.
+
+#### `POSTGRES_PASSWORD` {#app-postgres-password}
+
+The password to use for the Postgres container that stores the
+application's persistent data.
+
+This will be generated by the `generate-keys.sh` script.
+
+#### `POSTGRES_USER` {#app-postgres-user}
+
+The username to use for the Postgres container that stores the
+application's persistent data.
+
+#### `POSTMARK_TOKEN` {#app-postmark-token}
+
+The [Postmark](https://postmarkapp.com/) server token to use to send
+notification emails.
+
+#### `PUBLIC_HOST_API` {#app-public-host-api}
+
+The hostname that any other component, including a user viewing the
+application in a browser, can use to make connections to the API.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is `http-one-host`, this value must be the same as
+[`PUBLIC_HOST_APP`](#app-public-host-app).
+Otherwise, it must be different.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is `https`, this value must be an actual public domain or subdomain with
+a DNS record that points to the machine running the Docker Compose
+deployment.
+
+#### `PUBLIC_HOST_APP` {#app-public-host-app}
+
+The hostname that any other component, including a user viewing the
+application in a browser, can use to make connections to the app.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is `http-one-host`, this value must be the same as
+[`PUBLIC_HOST_API`](#app-public-host-api).
+Otherwise, it must be different.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is `https`, this value must be an actual public domain or subdomain with
+a DNS record that points to the machine running the Docker Compose
+deployment.
+
+#### `PUBLIC_PORT_HTTP_API` {#app-public-port-http-api}
+
+The port that any other component, including a user viewing the
+application in a browser, can use to make HTTP connections to the API.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is `http-one-host`, this value must be different from
+[`PUBLIC_PORT_HTTP_APP`](#app-public-port-http-app).
+Otherwise, it must be the same.
+
+You should usually keep this set to the same value as
+[`LISTEN_PORT_HTTP_API`](#app-listen-port-http-api).
+You should only need to set them to different values if you have a
+complex network setup that uses port mapping.
+
+#### `PUBLIC_PORT_HTTP_APP` {#app-public-port-http-app}
+
+The port that any other component, including a user viewing the
+application in a browser, can use to make HTTP connections to the app.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is `http-one-host`, this value must be different from
+[`PUBLIC_PORT_HTTP_API`](#api-public-port-http-api).
+Otherwise, it must be the same.
+
+You should usually keep this set to the same value as
+[`LISTEN_PORT_HTTP_APP`](#app-listen-port-http-app).
+You should only need to set them to different values if you have a
+complex network setup that uses port mapping.
+
+#### `PUBLIC_PORT_HTTPS` {#app-public-port-https}
+
+The port that any other component, including a user viewing the
+application in a browser, can use to make HTTPS connections to the app
+or API.
+
+If
+[`COMPOSE_PROFILES`](#app-compose-profiles)
+is not `https`, this value will be ignored.
+
+You should usually keep this set to the same value as
+[`LISTEN_PORT_HTTPS`](#app-listen-port-https).
+You should only need to set them to different values if you have a
+complex network setup that uses port mapping.
+
+#### `SESSION_SECRETS` {#app-session-secrets}
+
+A key to use for session security.
+
+This will be generated by the `generate-keys.sh` script.
+
+#### `RESTART_POLICY` {#app-restart-policy}
+
+The restart policy to use for all containers in the deployment.
+
+## Terraform Deployment
+
+The Terraform deployment builds on top of the Docker Compose deployment
+by provisioning a cloud machine and running the Docker Compose
+deployment on it.
+
+Start by extracting the `divviup-bring-your-own.tar.gz` file you
+downloaded in the [Prerequisites](#prerequisites) section.
+The extracted structure is as follows:
+
+```
+divviup-bring-your-own
+|-- aggregator
+|   |-- .env
+|   |-- docker-compose.yml
+|   `-- generate-keys.sh
+|-- application
+|   |-- .env
+|   |-- docker-compose.yml
+|   `-- generate-keys.sh
+`-- terraform
+    |-- aws.tf
+    |-- aws.tfvars
+    |-- (...other .tf/tfvars files...)
+    `-- provision.bash
+```
+
+To deploy the aggregator or application, take the following steps:
+
+1. `cd` into the `aggregator` or `application` directory, whichever one
+   you want to deploy.
+
+2. Run `sh generate-keys.sh` to initialize the security-related
+   environment variables in the `.env` file with freshly generated keys.
+
+3. Customize the environment variables in the `.env` file as desired.
+   For more information, see the
+   [Aggregator Environment Variables](#aggregator-environment-variables)
+   and
+   [Application Environment Variables](#application-environment-variables)
+   sections.
+
+   For the aggregator, you must always make the following
+   customizations:
+
+    1. You must set
+       [`COMPOSE_PROFILES`](#agg-compose-profiles)
+       to `https`.
+
+    2. You must set
+       [`LISTEN_HOST`](#agg-listen-host)
+       to `0.0.0.0`.
+
+    3. You must set
+       [`LISTEN_PORT_HTTP`](#agg-listen-port-http)
+       and
+       [`PUBLIC_PORT_HTTP`](#agg-public-port-http)
+       to `80`.
+
+    4. You must set
+       [`PUBLIC_HOST`](#agg-public-host)
+       to an actual public domain or subdomain that you own.
+
+    5. You must set
+       [`HTTPS_ADMIN_EMAIL`](#agg-https-admin-email)
+       to an appropriate email address.
+
+    6. You must set
+       [`LISTEN_PORT_HTTPS`](#agg-listen-port-https)
+       and
+       [`PUBLIC_PORT_HTTPS`](#agg-public-port-https)
+       to `443`.
+
+   For the application, you must always make the following
+   customizations:
+
+    1. You must set
+       [`COMPOSE_PROFILES`](#app-compose-profiles)
+       to `https`.
+
+    2. You must set
+       [`LISTEN_HOST`](#app-listen-host)
+       to `0.0.0.0`.
+
+    3. You must set
+       [`LISTEN_PORT_HTTP_API`](#app-listen-port-http-api),
+       [`LISTEN_PORT_HTTP_APP`](#app-listen-port-http-app),
+       [`PUBLIC_PORT_HTTP_API`](#app-public-port-http-api),
+       and
+       [`PUBLIC_PORT_HTTP_APP`](#app-public-port-http-app)
+       to `80`.
+
+    4. You must set
+       [`PUBLIC_HOST_API`](#app-public-host-api)
+       and
+       [`PUBLIC_HOST_APP`](#app-public-host-app)
+       to two actual public domains or subdomains that you own.
+       It's fine for one to be a subdomain of the other.
+
+    5. You must set
+       [`HTTPS_ADMIN_EMAIL`](#app-https-admin-email)
+       to an appropriate email address.
+
+    6. You must set
+       [`LISTEN_PORT_HTTPS`](#app-listen-port-https)
+       and
+       [`PUBLIC_PORT_HTTPS`](#app-public-port-https)
+       to `443`.
+
+4. `cd` back up to the `divviup-bring-your-own` directory.
+
+5. Decide which cloud provider you want to use.
+
+   Two files are provided for each supported cloud provider:
+   `terraform/<provider>.tf` and `terraform/<provider>.tfvars`.
+
+   Copy the two files for the provider you want to two files named
+   `terraform.tf` and `terraform.tfvars`.
+   For example: `cp terraform/aws.tf terraform.tf` and
+   `cp terraform/aws.tfvars terraform.tfvars`.
+
+6. Customize the variables in the `terraform.tfvars` file as desired.
+   For more information, see the
+   [Terraform Variables](#terraform-variables)
+   section.
+
+7. Use your cloud provider to acquire a static IP.
+
+   For the aggregator, use your DNS provider to add a DNS A record that
+   points
+   [`PUBLIC_HOST`](#agg-public-host)
+   at the static IP.
+
+   For the application, use your DNS provider to create two DNS A
+   records that point
+   [`PUBLIC_HOST_API`](#app-public-host-api)
+   and
+   [`PUBLIC_HOST_APP`](#app-public-host-app)
+   at the static IP.
+
+8. Set up your cloud provider credentials in your current shell
+   session's environment variables so Terraform can use them.
+   For more information, see the
+   [Terraform Credentials](#terraform-credentials)
+   section.
+
+9. Run `terraform init`.
+
+10. Freely run `terraform apply` and `terraform destroy` to deploy and
+    tear down the deployment.
+
+    Note that tearing down the deployment will destroy all persistent
+    data.
+    If you only want to start and stop the inner Docker Compose
+    deployment, you can SSH into the cloud machine and run
+    `docker compose start` and `docker compose stop`.
+
+### Terraform Credentials
+
+#### Amazon AWS
+
+Amazon AWS credentials can be provided to Terraform by using environment
+variables the same way as when using the AWS CLI.
+More information can be found
+[here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html).
+
+### Terraform Variables
+
+#### Amazon AWS
+
+##### `component` {#aws-component}
+
+Either `aggregator` or `application`, whichever one you want to deploy.
+
+##### `elastic_ip_id` {#aws-elastic-ip-id}
+
+The allocation ID of the elastic IP to use.
+
+##### `instance_type` {#aws-instance-type}
+
+The instance type to use.
+
+##### `name_prefix` {#aws-name-prefix}
+
+A prefix to prepend to the name of every created resource.
+
+The prefix will always be followed by an underscore character, so
+there's no need to include your own punctuation.
+
+##### `region` {#aws-region}
+
+The region to use.
+
+##### `resource_group_key` {#aws-resource-group-key}
+
+The key to use for a tag that will be added to every created resource
+for grouping purposes.
+
+##### `resource_group_value` {#aws-resource-group-value}
+
+The value to use for a tag that will be added to every created resource
+for grouping purposes.
+
+##### `ubuntu_version` {#aws-ubuntu-version}
+
+The version of Ubuntu to use.
+
+##### `volume_size_gb` {#aws-volume-size-gb}
+
+The size, in GB, to use for the root volume.
+
+## Local Test Walkthrough
+
+This section will walk through running a local test setup with one
+application and two aggregators, using the `divviup` CLI to do all
+operations.
+
+First, we'll use the `divviup-bring-your-own.tar.gz` file we downloaded
+in the [Prerequisites](#prerequisites) section to run the application
+and two aggregators.
+The default `.env` files are already configured to be used in a local
+test setup, so the main adjustment is to change the helper aggregator
+port so it doesn't conflict with the leader aggregator.
+To further simplify things, we'll also set the leader and helper
+aggregator bearer tokens to `token1` and `token2`, respectively:
+
+```
+tar xzf divviup-bring-your-own.tar.gz
+cd divviup-bring-your-own
+
+# Rename aggregator to leader and copy it to create the helper.
+mv aggregator leader
+cp -R leader helper
+
+# Configure and run the application.
+cd application
+sh generate-keys.sh
+docker compose create
+docker compose start
+cd ..
+
+# Configure and run the leader aggregator.
+cd leader
+sh generate-keys.sh
+sed -i.bak '
+  /^AGGREGATOR_API_AUTH_TOKENS=/ s/=.*/=token1/
+' .env
+docker compose create
+docker compose start
+cd ..
+
+# Configure and run the helper aggregator.
+cd helper
+sh generate-keys.sh
+sed -i.bak '
+  /PORT_HTTP=/                   s/=.*/=9002/
+  /^AGGREGATOR_API_AUTH_TOKENS=/ s/=.*/=token2/
+' .env
+docker compose create
+docker compose start
+cd ..
+```
+
+At this point, you should be able to open `http://127.0.0.1:8080` in a
+browser to view the application.
+However, we're going to do all operations using the `divviup` CLI.
+
+The application container has a copy of the `divviup` CLI in its root
+directory that always has administrator privileges for the application.
+We can use this to run `divviup` commands via `docker compose exec`, so
+let's `cd` back into the `application` directory and work from there:
+
+```
+cd application
+```
+
+Similar to the [Command Line Tutorial](command-line-tutorial.md), we can
+now go through registering the aggregators, creating an account,
+generating a collector credential, creating a task, submitting some
+client reports, and collecting the aggregated value:
+
+```
+url=http://127.0.0.2:8080
+
+# Register the leader aggregator.
+docker compose exec divviup-api-http \
+  /divviup -u $url -t '' \
+    aggregator create \
+    --name=leader \
+    --api-url=http://host.docker.internal:9001/api \
+    --bearer-token=token1 \
+    --shared \
+    --first-party \
+>leader.json
+leader=$(jq -r .id leader.json)
+
+# Register the helper aggregator.
+docker compose exec divviup-api-http \
+  /divviup -u $url -t '' \
+    aggregator create \
+    --name=helper \
+    --api-url=http://host.docker.internal:9002/api \
+    --bearer-token=token2 \
+    --shared \
+>helper.json
+helper=$(jq -r .id helper.json)
+
+# Create an account.
+docker compose exec divviup-api-http \
+  /divviup -u $url -t '' \
+    account create demo \
+>account.json
+account=$(jq -r .id account.json)
+
+# Generate a collector credential.
+docker compose exec divviup-api-http \
+  /divviup -u $url -t '' -a $account \
+    collector-credential generate \
+| sed '/^[^{} ]/ d' >collector.json
+collector=$(jq -r -s '.[0].id' collector.json)
+jq -s '.[1]' collector.json >credential.json
+
+# Create a task.
+docker compose exec divviup-api-http \
+  /divviup -u $url -t '' -a $account \
+    task create \
+    --name net-promoter-score \
+    --leader-aggregator-id $leader \
+    --helper-aggregator-id $helper \
+    --collector-credential-id $collector \
+    --vdaf histogram \
+    --categorical-buckets 0,1,2,3,4,5,6,7,8,9,10 \
+    --min-batch-size 100 \
+    --max-batch-size 200 \
+    --time-precision 60sec \
+>task.json
+task=$(jq -r .id task.json)
+
+# Submit some client reports.
+# Note that we don't submit anything to bucket 10.
+i=0
+while [ $i -lt 100 ]; do
+  m=$(($RANDOM % 10))
+  docker compose exec divviup-api-http \
+    /divviup -u $url -t '' -a $account \
+      dap-client upload \
+      --task-id $task \
+      --measurement $m \
+  ;
+  i=$((i + 1))
+done
+
+# Allow some time for the aggregators to work.
+sleep 60
+
+# Collect the results.
+docker compose cp credential.json divviup-api-http:/
+docker compose exec divviup-api-http \
+  /divviup -u $url -t '' -a $account \
+    dap-client collect \
+    --task-id $task \
+    --collector-credential-file /credential.json \
+    --current-batch \
+>results.txt
+
+# Show the results.
+cat results.txt
+```
+
+The results should look something like this:
+
+```
+Number of reports: 100
+Interval start: 2025-02-01 01:20:00 UTC
+Interval end: 2025-02-01 01:21:00 UTC
+Interval length: 60s
+Aggregation result: [13, 6, 6, 8, 6, 10, 13, 16, 10, 12, 0]
+Collection: Collection { partial_batch_selector: PartialBatchSelector { batch_identifier: BatchId(E9Rf0a9SpBWsXRUVV2JzQhC7shRrDw0n8YkbVpBdF9I) }, report_count: 100, interval: (2025-02-01T01:20:00Z, TimeDelta { secs: 60, nanos: 0 }), aggregate_result: [13, 6, 6, 8, 6, 10, 13, 16, 10, 12, 0] }
+```
+
+Note that the sum of the `Aggregation result` array is 100, and that
+bucket 10 is empty, matching the client reports we submitted.
+
+## Terraform Test Walkthrough
+
+This section will walk through running a test setup in Amazon AWS with
+one application and two aggregators, each running on a different cloud
+machine in a different region.
+
+First, we'll assume the following:
+
+1. We own the domain `example.com` and we want to host the application
+   at `myapp.example.com` and `api.myapp.example.com`, the leader
+   aggregator at `myleader.example.com`, and the helper aggregator at
+   `myhelper.example.com`.
+
+2. We want to deploy the application in the `us-west-1` region, the
+   leader aggregator in the `us-west-2` region, and the helper
+   aggregator in the `us-east-1` region.
+
+3. We've already allocated an elastic IP in each region and used our DNS
+   provider to create the appropriate DNS A records to point the domains
+   at the elastic IPs.
+
+4. We've already set up our AWS credentials in our current shell
+   session's environment variables so Terraform can use them.
+
+Next, we'll use the `divviup-bring-your-own.tar.gz` file we downloaded
+in the [Prerequisites](#prerequisites) section to prepare the three
+deployments.
+Like in the
+[Local Test Walkthrough](#local-test-walkthrough),
+we'll also simplify things by setting the leader and helper aggregator
+tokens to `token1` and `token2`, respectively:
+
+```
+# Prepare the application.
+tar xzf divviup-bring-your-own.tar.gz
+mv divviup-bring-your-own application
+cd application/application
+sh generate-keys.sh
+sed -i.bak '
+  /^COMPOSE_PROFILES=/  s/=.*/=https/
+  /_PORT_HTTP_/         s/=.*/=80/
+  /_PORT_HTTPS=/        s/=.*/=443/
+  /^PUBLIC_HOST_APP=/   s/=.*/=myapp.example.com/
+  /^PUBLIC_HOST_API=/   s/=.*/=api.myapp.example.com/
+  /^HTTPS_ADMIN_EMAIL=/ s/=.*/=admin@example.com/
+' .env
+cd ..
+cp terraform/aws.tf terraform.tf
+cp terraform/aws.tfvars terraform.tfvars
+sed -i.bak '
+  /^component /     s/=.*/= "application"/
+  /^region /        s/=.*/= "us-west-1"/
+  /^elastic_ip_id / s/=.*/= "eipalloc-718e0ce809ad84e85"/
+' terraform.tfvars
+terraform init
+cd ..
+
+# Prepare the leader aggregator.
+tar xzf divviup-bring-your-own.tar.gz
+mv divviup-bring-your-own leader
+cd leader/aggregator
+sh generate-keys.sh
+sed -i.bak '
+  /^COMPOSE_PROFILES=/           s/=.*/=https/
+  /_PORT_HTTP=/                  s/=.*/=80/
+  /_PORT_HTTPS=/                 s/=.*/=443/
+  /^PUBLIC_HOST=/                s/=.*/=myleader.example.com/
+  /^HTTPS_ADMIN_EMAIL=/          s/=.*/=admin@example.com/
+  /^AGGREGATOR_API_AUTH_TOKENS=/ s/=.*/=token1/
+' .env
+cd ..
+cp terraform/aws.tf terraform.tf
+cp terraform/aws.tfvars terraform.tfvars
+sed -i.bak '
+  /^component /     s/=.*/= "aggregator"/
+  /^region /        s/=.*/= "us-west-2"/
+  /^elastic_ip_id / s/=.*/= "eipalloc-6e82c9317b497704d"/
+' terraform.tfvars
+terraform init
+cd ..
+
+# Prepare the helper aggregator.
+tar xzf divviup-bring-your-own.tar.gz
+mv divviup-bring-your-own helper
+cd helper/aggregator
+sh generate-keys.sh
+sed -i.bak '
+  /^COMPOSE_PROFILES=/           s/=.*/=https/
+  /_PORT_HTTP=/                  s/=.*/=80/
+  /_PORT_HTTPS=/                 s/=.*/=443/
+  /^PUBLIC_HOST=/                s/=.*/=myhelper.example.com/
+  /^HTTPS_ADMIN_EMAIL=/          s/=.*/=admin@example.com/
+  /^AGGREGATOR_API_AUTH_TOKENS=/ s/=.*/=token2/
+' .env
+cd ..
+cp terraform/aws.tf terraform.tf
+cp terraform/aws.tfvars terraform.tfvars
+sed -i.bak '
+  /^component /     s/=.*/= "aggregator"/
+  /^region /        s/=.*/= "us-east-1"/
+  /^elastic_ip_id / s/=.*/= "eipalloc-a8dc026b90a5c1fde"/
+' terraform.tfvars
+terraform init
+cd ..
+```
+
+Next, we'll deploy all three components:
+
+```
+# Deploy the application.
+cd application
+terraform apply
+cd ..
+
+# Deploy the leader aggregator.
+cd leader
+terraform apply
+cd ..
+
+# Deploy the helper aggregator.
+cd helper
+terraform apply
+cd ..
+
+# Allow some time for the initial HTTPS certificates to be acquired.
+sleep 60
+```
+
+Next, we can run the same test as in the
+[Local Test Walkthrough](#local-test-walkthrough).
+We'll omit repeating the commands here because they're fairly long, but
+the commands will be the same except for the following changes:
+
+* Change all occurrences of `http://127.0.0.2:8080` to
+  `https://api.myapp.example.com`.
+* Change all occurrences of `http://host.docker.internal:9001` to
+  `https://myleader.example.com`.
+* Change all occurrences of `http://host.docker.internal:9002` to
+  `https://myhelper.example.com`.
+* Change all occurrences of `divviup-api-http` to
+  `divviup-api-https`.
+* Because the commands use `docker compose exec` to run the `divviup`
+  CLI with administrator privileges in the application container, SSH
+  into the application machine and run the commands there.
+
+Finally, we'll tear down all three deployments:
+
+```
+# Tear down the application.
+cd application
+terraform destroy
+cd ..
+
+# Tear down the leader aggregator.
+cd leader
+terraform destroy
+cd ..
+
+# Tear down the helper aggregator.
+cd helper
+terraform destroy
+cd ..
+```
