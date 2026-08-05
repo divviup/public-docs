@@ -80,3 +80,15 @@ header, if provided.
 This error indicates the Janus aggregator could not service this request within
 a timeout bounds, and it was cancelled by the aggregator. The client should
 retry this request, respecting the HTTP `Retry-After` header, if provided.
+
+### Forbidden Mutation
+
+The request attempted to change a resource that is immutable once created by re-
+using the identifier but with different parameters. (Note that re-sending the
+original request verbatim is always safe.)
+
+### Aggregate Share Request Rejected
+
+A Janus helper has declined to produce an aggregate share for the requested
+batch. It may be the case that the batch is old enough to be eligible for
+garbage collection, which is then refused to prevent replay.
