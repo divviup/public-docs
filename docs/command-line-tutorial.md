@@ -299,7 +299,7 @@ Upload a random set of 150 measurements.
 ```sh
 for i in {1..150}; do
   measurement=$(( $RANDOM % 10 ))
-  divviup dap-client upload --task-id $TASK_ID --measurement $measurement;
+  divviup dap-client upload --task-id=$TASK_ID --measurement $measurement;
 done
 ```
 
@@ -314,7 +314,7 @@ collection results:
 
 ```sh
 divviup dap-client collect \
-    --task-id $TASK_ID \
+    --task-id=$TASK_ID \
     --collector-credential-file $COLLECTOR_CREDENTIAL_PATH \
     --current-batch
 ```
