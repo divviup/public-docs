@@ -39,11 +39,18 @@ an aggregation job that has been deleted.
 The [DAP specification][agg-job-deletion] states that if a leader must abandon
 an aggregation job, it should delete that resource in the helper to let it clean
 up its resources. The Janus leader does this, and the Janus helper supports
-`DELETE` requests on an aggregation job URI. Deleted aggregation jobs may not be
-acted upon further and any further attempts to run that job will fail.
+`DELETE` requests on an aggregation job URI. Further attempts to run or
+otherwise act upon deleted aggregation jobs will fail.
 
 [agg-job-deletion]:
   https://datatracker.ietf.org/doc/html/draft-ietf-ppm-dap-09#name-helper-continuation
+
+### Collection Job Deleted
+
+This error occurs if a Janus leader receives a request to act on a collection
+job that has been deleted with a `DELETE` request to the collection job URI.
+
+Further attempts to run or otherwise act upon deleted collection jobs will fail.
 
 ### Aggregate Share ID Unrecognized
 
@@ -86,6 +93,12 @@ retry this request, respecting the HTTP `Retry-After` header, if provided.
 The request attempted to change a resource that is immutable once created by re-
 using the identifier but with different parameters. (Note that re-sending the
 original request verbatim is always safe.)
+
+### Collection Job Request Rejected
+
+A Janus leader has declined to create a collection job for the requested batch.
+It may be the case that the batch is old enough to be eligible for garbage
+collection, which is then refused to prevent replay.
 
 ### Aggregate Share Request Rejected
 
